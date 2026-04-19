@@ -25,7 +25,7 @@
 - 📊 Dashboard mit Statistiken
 - 👤 Mitgliederverwaltung (CRUD + CSV-Export)
 - 💰 Finanzverwaltung (Beiträge, SEPA, Spenden)
-- 📋 Projektmanagement (Kanban, Budget, Verträge)
+- 📋 Projektmanagement (Kanban, Budget, Verträgef)
 - 🤝 Sponsoren- und Partnerverwaltung
 - 📈 Auswertungen und Berichte
 
