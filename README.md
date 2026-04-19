@@ -1,31 +1,33 @@
-# acordes-brasil
-Página desenvolvida em 19.04.26
 # 🎵 Acordes Brasil - Chorverwaltung
 
-**Brasilianischer Chor in Frankfurt am Main**
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PWA Ready](https://img.shields.io/badge/PWA-ready-brightgreen.svg)](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps)
 
-Vollständige Verwaltungslösung für Chöre und Vereine.
+**Brasilianischer Chor in Frankfurt am Main** - Vollständige Verwaltungslösung für Chöre und Vereine.
 
 ## ✨ Features
 
-### Öffentlicher Bereich
-- 🌍 Mehrsprachig (DE / EN / PT)
+### 🎯 Öffentlicher Bereich
+- 🌍 Mehrsprachig (DE 🇩🇪 / EN 🇬🇧 / PT 🇧🇷)
 - 📅 Konzertübersicht
 - 📝 Mitgliedschaftsantrag online
 - 🤝 Sponsoring-Informationen
 
-### Mitgliederbereich
+### 👥 Mitgliederbereich
 - 🔐 Passwortgeschützter Login
 - 📅 Kalender mit Teilnahme-Funktion
-- 🎵 Audio-Übungsdateien
+- 🎵 Audio-Übungsdateien pro Stimme
+- 📄 Partituren-Download
 - 📱 Push-Benachrichtigungen
-- 🗳️ Systemisches Konsensieren
+- 🗳️ Systemisches Konsensieren (SK-Prinzip)
 
-### Vorstandsbereich
-- 👤 Mitgliederverwaltung
-- 💰 Finanzverwaltung (SEPA, Spenden)
-- 📋 Projektmanagement
-- 🤝 Sponsorenverwaltung
+### 👑 Vorstandsbereich
+- 📊 Dashboard mit Statistiken
+- 👤 Mitgliederverwaltung (CRUD + CSV-Export)
+- 💰 Finanzverwaltung (Beiträge, SEPA, Spenden)
+- 📋 Projektmanagement (Kanban, Budget, Verträge)
+- 🤝 Sponsoren- und Partnerverwaltung
+- 📈 Auswertungen und Berichte
 
 ## 🚀 Schnellstart
 
@@ -33,5 +35,6 @@ Vollständige Verwaltungslösung für Chöre und Vereine.
 git clone https://github.com/Luis26-star/acordes-brasil.git
 cd acordes-brasil
 npm install
+cp .env.example .env
 npm run dev
 
