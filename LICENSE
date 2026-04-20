@@ -1,21 +1,64 @@
-MIT License
+# 🎶 Acordes Brasil App
 
-Copyright (c) 2025 Acordes Brasil e.V.
+Eine Web-App zur Organisation eines Chors: Mitgliederverwaltung, Probenplanung, Konzerte und interne Kommunikation.
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+---
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+## 🚀 Features
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+- 📅 Proben- & Konzertplanung
+- 👥 Mitgliederverwaltung
+- 🔔 Push-Benachrichtigungen
+- 🌍 Mehrsprachigkeit (DE / EN / PT)
+- 🔐 Login-Bereich für Mitglieder & Vorstand
+
+---
+
+## ⚖️ Lizenz
+
+Dieses Projekt ist unter der **GNU Affero General Public License v3 (AGPL-3.0)** lizenziert.
+
+### ❗ Was bedeutet das?
+
+Du darfst:
+- den Code verwenden
+- den Code verändern
+- den Code weiterverbreiten
+
+ABER:
+
+👉 Wenn du diese Software (oder eine abgeleitete Version) öffentlich betreibst  
+(z. B. als Website oder Web-App), musst du:
+
+- den vollständigen Quellcode offenlegen
+- alle Änderungen ebenfalls unter AGPL veröffentlichen
+
+---
+
+## 🔒 Kommerzielle Nutzung
+
+Wenn du die Software **ohne Offenlegung deines Codes** verwenden möchtest  
+(z. B. in einem geschlossenen Produkt oder kommerziellen Projekt):
+
+👉 benötigst du eine **separate kommerzielle Lizenz**
+
+📧 Kontakt: kontakt@acordesbrasil.de
+
+---
+
+## ⚠️ Haftungsausschluss
+
+Die Software wird "wie sie ist" bereitgestellt, ohne Garantie jeglicher Art.
+
+---
+
+## ❤️ Mitwirken
+
+Beiträge sind willkommen!  
+Bitte erstelle einen Fork und sende einen Pull Request.
+
+---
+
+## 📌 Projektstatus
+
+Aktive Entwicklung – Features werden kontinuierlich erweitert.
