@@ -27,41 +27,58 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <!-- CSS -->
-  <link rel="stylesheet" href="../src/css/style.css">
+<link rel="stylesheet" href="../src/css/style.css">
 </head>
 <body>
 
-<!-- Cookie Consent -->
-<div class="cookie-banner" id="cookieBanner">
-  <div class="cookie-content">
+<!-- ========== COOKIE BANNER ========== -->
+<div class="c-cookie" id="cookieBanner">
+  <div class="c-cookie__content">
     <div>
       <strong>🍪 Cookie-Einstellungen</strong><br>
       <span id="cookieText">Wir verwenden Cookies für die bestmögliche Nutzung.</span>
     </div>
-    <div class="cookie-buttons">
-      <button class="btn btn-outline-light" id="declineCookiesBtn">Nur notwendige</button>
-      <button class="btn btn-primary" id="acceptCookiesBtn">Alle akzeptieren</button>
+    <div class="u-flex u-gap-sm">
+      <button class="c-btn c-btn--outline-light" id="declineCookiesBtn">
+        Nur notwendige
+      </button>
+      <button class="c-btn c-btn--primary" id="acceptCookiesBtn">
+        Alle akzeptieren
+      </button>
     </div>
   </div>
 </div>
 
-<!-- Navigation -->
-<nav class="nav">
-  <div class="nav-container">
-    <div class="logo">
-      <i class="fas fa-music"></i> 
+<!-- ========== NAVIGATION ========== -->
+<nav class="c-nav">
+  <div class="c-nav__container">
+
+    <!-- Logo -->
+    <div class="c-nav__logo">
+      <i class="fas fa-music"></i>
       <span>Acordes Brasil</span>
     </div>
-    <div class="nav-right">
-      <div class="lang-switcher" id="langSwitcher"></div>
+
+    <!-- Right Side -->
+    <div class="u-flex u-gap-sm">
+
+      <!-- Sprachwechsler -->
+      <div id="langSwitcher"></div>
+
+      <!-- Burger -->
       <div class="menu-toggle" id="mobile-menu">
         <span></span><span></span><span></span>
       </div>
+
     </div>
-    <ul class="menu" id="nav-menu"></ul>
+
+    <!-- Menü -->
+    <ul class="c-nav__menu" id="nav-menu">
+      <li><a class="c-nav__link" href="#">Home</a></li>
+    </ul>
+
   </div>
 </nav>
-
 <!-- Login Modal -->
 <div class="login-overlay" id="loginOverlay">
   <div class="login-modal">
