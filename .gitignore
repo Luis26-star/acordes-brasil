@@ -1,21 +1,43 @@
-# Dependencies
+# =========================================================
+# DEPENDENCIES
+# =========================================================
 node_modules/
 .pnp/
 .pnp.js
 
-# Build output
+
+# =========================================================
+# BUILD OUTPUT
+# =========================================================
 dist/
 build/
 out/
+.vercel/
+.netlify/
 
-# Environment variables
+
+# =========================================================
+# ENV FILES (NICHT INS REPO!)
+# =========================================================
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
 
-# IDE
+
+# =========================================================
+# LOGS
+# =========================================================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# =========================================================
+# IDE / EDITOR
+# =========================================================
 .vscode/
 .idea/
 *.swp
@@ -23,33 +45,55 @@ out/
 *~
 .DS_Store
 
-# Logs
-logs/
-*.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
 
-# Testing
+# =========================================================
+# TESTING
+# =========================================================
 coverage/
 .nyc_output/
 
-# Temporary files
+
+# =========================================================
+# TEMP FILES
+# =========================================================
 tmp/
 temp/
 *.tmp
 
-# Supabase
-supabase/.temp/
 
-# Audio files (zu groß für GitHub)
+# =========================================================
+# CACHE
+# =========================================================
+.cache/
+.parcel-cache/
+.vite/
+
+
+# =========================================================
+# SUPABASE
+# =========================================================
+supabase/.temp/
+.supabase/
+
+
+# =========================================================
+# UPLOADS / USER FILES
+# =========================================================
+uploads/
+src/assets/documents/contracts/signed/
+
+
+# =========================================================
+# AUDIO FILES (groß)
+# =========================================================
 src/assets/audio/repertoire/*.mp3
 src/assets/audio/repertoire/*.wav
 
-# Uploaded documents
-src/assets/documents/contracts/signed/
-uploads/
 
-# Cache
-.cache/
-.parcel-cache/
+# =========================================================
+# OPTIONAL (falls später genutzt)
+# =========================================================
+# *.sqlite
+# *.db
+# *.pem
+# *.key
