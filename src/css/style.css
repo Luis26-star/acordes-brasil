@@ -1,82 +1,94 @@
 /* =========================================================
-   1. TOKENS (Design System)
+   ULTIMATE CHOR APP CSS (Senior-Level)
+   - Design System + UX + Advanced UI
+   - Modal / Editing / Calendar Pro
+========================================================= */
+
+/* =========================================================
+   1. TOKENS
 ========================================================= */
 :root {
-  --primary: #0a6f39;
-  --primary-light: #1a8f4a;
-  --primary-dark: #06502a;
+  /* COLORS */
+  --color-primary: #0a6f39;
+  --color-primary-dark: #06502a;
+  --color-accent: #d9f24a;
 
-  --accent: #d9f24a;
-  --yellow: #ffd200;
+  --color-bg: #f8faf8;
+  --color-surface: #ffffff;
+  --color-surface-alt: #f1f5f2;
 
-  --white: #ffffff;
+  --color-text: #1e2a23;
+  --color-text-muted: #5a6a60;
 
-  --gray-50: #f8faf8;
-  --gray-100: #eef2ef;
-  --gray-200: #dde5e0;
-  --gray-600: #5a6a60;
-  --gray-900: #1e2a23;
+  --color-border: #dde5e0;
+  --color-danger: #dc2626;
 
-  --danger: #dc2626;
-  --success: #16a34a;
-  --warning: #eab308;
+  /* SPACING */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 1rem;
+  --space-4: 1.5rem;
+  --space-5: 2rem;
 
+  /* RADIUS */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+  --radius-full: 999px;
+
+  /* SHADOW */
   --shadow-sm: 0 4px 12px rgba(0,0,0,0.08);
   --shadow-md: 0 8px 24px rgba(0,0,0,0.12);
-  --shadow-lg: 0 20px 40px rgba(0,0,0,0.15);
+  --shadow-lg: 0 20px 40px rgba(0,0,0,0.18);
 
-  --radius-sm: 12px;
-  --radius-md: 20px;
-  --radius-lg: 28px;
+  /* MOTION */
+  --transition-fast: 0.15s ease;
+  --transition: 0.25s ease;
 
-  --transition: all 0.3s ease;
+  /* Z-INDEX */
+  --z-modal: 2000;
+  --z-dropdown: 1500;
 }
 
 
 /* =========================================================
-   2. RESET & BASE
+   2. BASE
 ========================================================= */
 *,
 *::before,
 *::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 body {
-  font-family: 'Montserrat', sans-serif;
-  background: var(--gray-50);
-  color: var(--gray-900);
-  line-height: 1.6;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  -webkit-font-smoothing: antialiased;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
 }
 
-h1, h2, h3 {
-  font-weight: 700;
-}
-
-a {
-  text-decoration: none;
-  color: inherit;
+button {
+  font: inherit;
+  cursor: pointer;
 }
 
 
 /* =========================================================
-   3. UTILITIES
+   3. LAYOUT
 ========================================================= */
-.u-flex { display: flex; }
-.u-center { display: flex; align-items: center; justify-content: center; }
-.u-gap-sm { gap: 0.5rem; }
-.u-gap-md { gap: 1rem; }
-.u-text-center { text-align: center; }
-.u-container {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 1rem;
+.app {
+  max-width: 1200px;
+  margin-inline: auto;
+  padding: var(--space-5) var(--space-3);
+}
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-4);
 }
 
 
@@ -85,260 +97,285 @@ a {
 ========================================================= */
 
 /* ---------- BUTTON ---------- */
-.c-btn {
-  padding: 0.75rem 1.5rem;
-  border-radius: 40px;
-  font-weight: 600;
-  border: none;
-  cursor: pointer;
-  transition: var(--transition);
+.btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.95rem;
-}
+  gap: var(--space-2);
 
-.c-btn--primary {
-  background: var(--primary);
+  padding: 0.6rem 1.2rem;
+  border-radius: var(--radius-full);
+  border: none;
+
+  background: var(--color-primary);
   color: white;
+  font-weight: 600;
+
+  transition: all var(--transition-fast);
 }
 
-.c-btn--primary:hover {
-  background: var(--primary-dark);
+.btn:hover {
+  background: var(--color-primary-dark);
+  transform: translateY(-1px);
 }
 
-.c-btn--outline-light {
-  border: 2px solid rgba(255,255,255,0.3);
-  color: white;
-}
-
-
-/* ---------- NAVIGATION ---------- */
-.c-nav {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  background: rgba(10,111,57,0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  padding: 0.8rem 1rem;
-  z-index: 1000;
-  box-shadow: var(--shadow-sm);
-}
-
-.c-nav__container {
-  max-width: 1280px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.c-nav__logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-weight: 700;
-  color: white;
-}
-
-.c-nav__menu {
-  display: none;
-  list-style: none;
-}
-
-.c-nav__menu.is-active {
-  display: flex;
-  flex-direction: column;
-}
-
-.c-nav__link {
-  padding: 0.5rem 1rem;
-  color: rgba(255,255,255,0.9);
-  border-radius: 40px;
-}
-
-
-/* ---------- HERO ---------- */
-.c-hero {
-  margin-top: 60px;
-  min-height: 70dvh;
-  background: linear-gradient(135deg, var(--primary), #064e28);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 2rem 1rem;
-}
-
-.c-hero__content {
-  text-align: center;
-  max-width: 900px;
-}
-
-.c-hero__title {
-  font-size: 2.5rem;
-  font-weight: 800;
-  color: white;
-  margin-bottom: 0.5rem;
-}
-
-.c-hero__subtitle {
-  font-size: 1.2rem;
-  color: var(--yellow);
-  margin-bottom: 1.5rem;
-}
-
-.c-hero__cta {
-  background: var(--yellow);
-  color: var(--primary-dark);
-  padding: 1rem 1.5rem;
-  border-radius: 60px;
-  font-weight: 700;
+.btn--ghost {
+  background: transparent;
+  color: var(--color-text-muted);
 }
 
 
 /* ---------- CARD ---------- */
-.c-card {
-  background: var(--white);
-  padding: 1.5rem;
-  border-radius: var(--radius-md);
+.card {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+
+  padding: var(--space-4);
+  margin-bottom: var(--space-4);
+
   box-shadow: var(--shadow-sm);
-  border: 1px solid var(--gray-100);
-}
-
-.c-card__title {
-  color: var(--primary-dark);
-  margin-bottom: 1rem;
-}
-
-.c-card__meta {
-  display: flex;
-  gap: 10px;
-  color: var(--gray-600);
-  font-size: 0.95rem;
 }
 
 
-/* ---------- GRID ---------- */
-.c-grid {
+/* =========================================================
+   MEMBERS (ADVANCED)
+========================================================= */
+.member {
   display: grid;
-  gap: 1.5rem;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+
+  border-radius: var(--radius-md);
+  background: var(--color-surface-alt);
+  border: 1px solid var(--color-border);
+
+  transition: all var(--transition-fast);
 }
 
-.c-grid--responsive {
-  grid-template-columns: 1fr;
+.member:hover {
+  background: var(--color-surface);
+  transform: translateX(4px);
+}
+
+.member__name {
+  font-weight: 500;
+}
+
+.member__voice {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+}
+
+/* actions */
+.member__actions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.member__btn {
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+}
+
+.member__btn:hover {
+  color: var(--color-primary);
+}
+
+.member__btn--danger:hover {
+  color: var(--color-danger);
 }
 
 
-/* ---------- MODAL ---------- */
-.c-modal {
+/* =========================================================
+   FILTER (CHIPS)
+========================================================= */
+.filter-bar {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+}
+
+.filter-btn {
+  padding: 0.3rem 0.8rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-border);
+
+  background: transparent;
+  font-size: 0.8rem;
+
+  transition: all var(--transition-fast);
+}
+
+.filter-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.filter-btn.active {
+  background: var(--color-primary);
+  color: white;
+}
+
+
+/* =========================================================
+   MODAL SYSTEM (PRO LEVEL)
+========================================================= */
+.modal {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.8);
-  backdrop-filter: blur(8px);
+
   display: none;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
-  z-index: 2000;
+
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(6px);
+
+  z-index: var(--z-modal);
 }
 
-.c-modal.is-active {
+.modal.is-open {
   display: flex;
 }
 
-.c-modal__box {
-  background: white;
-  padding: 2rem;
-  border-radius: var(--radius-lg);
-  max-width: 400px;
-  width: 100%;
+.modal__box {
+  width: min(100%, 420px);
+  background: var(--color-surface);
+
+  border-radius: var(--radius-xl);
+  padding: var(--space-4);
+
+  box-shadow: var(--shadow-lg);
+}
+
+.modal__title {
+  font-weight: 600;
+  margin-bottom: var(--space-3);
+}
+
+.modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
 }
 
 
 /* ---------- FORM ---------- */
-.c-input {
+.input {
   width: 100%;
-  padding: 1rem;
-  border: 2px solid var(--gray-200);
-  border-radius: 50px;
-  margin-bottom: 1rem;
+  padding: 0.7rem 1rem;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-border);
+  margin-bottom: var(--space-3);
 }
 
-.c-input:focus {
-  outline: 2px solid var(--primary);
-  outline-offset: 2px;
-}
-
-
-/* ---------- COOKIE BANNER ---------- */
-.c-cookie {
-  position: fixed;
-  bottom: 0;
-  width: 100%;
-  background: var(--gray-900);
-  color: white;
-  padding: 1.5rem;
-  transform: translateY(100%);
-  transition: var(--transition);
-  z-index: 10000;
-}
-
-.c-cookie.is-active {
-  transform: translateY(0);
-}
-
-.c-cookie__content {
-  max-width: 1280px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
+.input:focus {
+  outline: 2px solid var(--color-primary);
+  border-color: transparent;
 }
 
 
-/* ---------- FOOTER ---------- */
-.c-footer {
-  background: var(--gray-900);
-  color: var(--gray-100);
-  padding: 2rem 1rem;
+/* =========================================================
+   CALENDAR (PRO LEVEL)
+========================================================= */
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: var(--space-2);
+}
+
+/* header (Mon Tue etc.) */
+.calendar__header {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
   text-align: center;
-  margin-top: auto;
+}
+
+/* day cell */
+.day {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  min-height: 100px;
+  padding: var(--space-2);
+
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface);
+
+  transition: all var(--transition-fast);
+}
+
+.day:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
+}
+
+.day__date {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+}
+
+/* event */
+.day__event {
+  margin-top: var(--space-1);
+  padding: 0.2rem 0.4rem;
+
+  font-size: 0.7rem;
+  border-radius: 6px;
+
+  background: var(--color-primary);
+  color: white;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* multiple events */
+.day__event + .day__event {
+  margin-top: 2px;
+}
+
+/* states */
+.day.is-today {
+  outline: 2px solid var(--color-accent);
+}
+
+.day.is-selected {
+  border-color: var(--color-primary);
+}
+
+.day.is-outside {
+  opacity: 0.4;
 }
 
 
 /* =========================================================
-   5. STATES
+   STATES
 ========================================================= */
-.is-active { display: flex; }
-.is-hidden { display: none; }
+.is-hidden { display: none !important; }
+.is-loading { opacity: 0.6; pointer-events: none; }
 
 
 /* =========================================================
-   6. RESPONSIVE
+   RESPONSIVE
 ========================================================= */
-@media (min-width: 768px) {
+@media (max-width: 768px) {
 
-  .c-nav {
-    padding: 0.8rem 2rem;
+  .calendar {
+    grid-template-columns: repeat(4, 1fr);
   }
 
-  .c-nav__menu {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5rem;
-  }
-
-  .c-hero__title {
-    font-size: 4rem;
-  }
-
-  .c-hero__subtitle {
-    font-size: 1.5rem;
-  }
-
-  .c-grid--responsive {
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  .modal__box {
+    width: 95%;
   }
 }
