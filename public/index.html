@@ -1,42 +1,62 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
+  <!-- =========================================================
+       META (SEO + PERFORMANCE)
+  ========================================================= -->
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Acordes Brasil · Chor Frankfurt</title>
-  
-  <!-- PWA -->
-  <link rel="manifest" href="manifest.json">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Acordes Brasil · Brasilianischer Chor Frankfurt</title>
+
+  <meta name="description" content="Acordes Brasil – Brasilianischer Chor in Frankfurt. Konzerte, Proben und Mitgliedschaft.">
   <meta name="theme-color" content="#0a6f39">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Acordes Brasil">
+  <meta property="og:description" content="Brasilianischer Chor in Frankfurt am Main">
+  <meta property="og:type" content="website">
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.json">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  
-  <!-- Supabase -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  
-  <!-- FullCalendar -->
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/locales-all.global.min.js"></script>
-  
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  
-  <!-- Fonts & Icons -->
+
+  <!-- Performance -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Icons -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
+
   <!-- CSS -->
-<link rel="stylesheet" href="../src/css/style.css">
+  <link rel="stylesheet" href="/src/css/style.css">
+
+  <!-- External JS (defer = schneller) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- FullCalendar CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.min.css">
 </head>
+
 <body>
 
-<!-- ========== COOKIE BANNER ========== -->
-<div class="c-cookie" id="cookieBanner">
+<!-- Skip Link -->
+<a href="#mainContent" class="skip-link">Zum Inhalt springen</a>
+
+
+<!-- =========================================================
+     COOKIE BANNER
+========================================================= -->
+<div class="c-cookie" id="cookieBanner" role="dialog" aria-live="polite">
   <div class="c-cookie__content">
     <div>
       <strong>🍪 Cookie-Einstellungen</strong><br>
-      <span id="cookieText">Wir verwenden Cookies für die bestmögliche Nutzung.</span>
+      <span>Wir verwenden Cookies für die bestmögliche Nutzung.</span>
     </div>
     <div class="u-flex u-gap-sm">
       <button class="c-btn c-btn--outline-light" id="declineCookiesBtn">
@@ -49,92 +69,128 @@
   </div>
 </div>
 
-<!-- ========== NAVIGATION ========== -->
-<nav class="c-nav">
+
+<!-- =========================================================
+     NAVIGATION
+========================================================= -->
+<nav class="c-nav" role="navigation">
   <div class="c-nav__container">
 
-    <!-- Logo -->
     <div class="c-nav__logo">
       <i class="fas fa-music"></i>
       <span>Acordes Brasil</span>
     </div>
 
-    <!-- Right Side -->
     <div class="u-flex u-gap-sm">
-
-      <!-- Sprachwechsler -->
       <div id="langSwitcher"></div>
 
-      <!-- Burger -->
-      <div class="menu-toggle" id="mobile-menu">
+      <button class="menu-toggle" id="mobile-menu" aria-label="Menü öffnen">
         <span></span><span></span><span></span>
-      </div>
-
+      </button>
     </div>
 
-    <!-- Menü -->
-    <ul class="c-nav__menu" id="nav-menu">
-      <li><a class="c-nav__link" href="#">Home</a></li>
-    </ul>
+    <ul class="c-nav__menu" id="nav-menu" role="menu"></ul>
 
   </div>
 </nav>
-<!-- Login Modal -->
-<div class="login-overlay" id="loginOverlay">
+
+
+<!-- =========================================================
+     LOGIN MODAL
+========================================================= -->
+<div class="login-overlay" id="loginOverlay" role="dialog" aria-modal="true">
   <div class="login-modal">
-    <h3 id="loginTitle">🔐 Mitgliederbereich</h3>
-    <form id="loginForm">
-      <input type="email" id="loginEmail" placeholder="E-Mail" required>
-      <input type="password" id="loginPassword" placeholder="Passwort" required>
+    <h3>🔐 Mitgliederbereich</h3>
+
+    <form id="loginForm" novalidate>
+      <input type="email" id="loginEmail" placeholder="E-Mail" required autocomplete="email">
+      <input type="password" id="loginPassword" placeholder="Passwort" required autocomplete="current-password">
+
       <button type="submit" class="btn btn-primary">Anmelden</button>
       <div class="login-error" id="loginError"></div>
     </form>
-    <p style="margin-top: 1rem; font-size: 0.85rem;">
-      <a href="#" id="showRegisterLink" style="color: var(--primary);">Registrieren</a>
+
+    <p class="login-footer">
+      <a href="#" id="showRegisterLink">Registrieren</a>
     </p>
   </div>
 </div>
 
-<!-- Hero -->
+
+<!-- =========================================================
+     HERO
+========================================================= -->
 <header class="hero">
   <div class="hero-overlay">
     <h1>Acordes Brasil</h1>
     <p class="subtitle">Brasilianischer Chor in Frankfurt a.M.</p>
-    <a href="#" class="hero-button" id="discoverConcertsBtn">
+
+    <a href="#concertsSection" class="hero-button" id="discoverConcertsBtn">
       Nächstes Konzert entdecken <i class="fas fa-arrow-right"></i>
     </a>
   </div>
 </header>
 
-<!-- Öffentlicher Bereich -->
-<main id="publicContent">
+
+<!-- =========================================================
+     MAIN CONTENT
+========================================================= -->
+<main id="mainContent">
+
   <section class="section" id="concertsSection">
     <div class="section-header">
       <i class="fas fa-calendar-alt"></i>
       <h2>Nächste Konzerte</h2>
     </div>
+
     <div id="publicConcerts" class="concerts-grid"></div>
   </section>
+
 </main>
 
-<!-- Footer -->
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
 <footer>
-  <div class="logo" style="justify-content:center; color:white;">
-    <i class="fas fa-music"></i> Acordes Brasil
+  <div class="logo">
+    <i class="fas fa-music"></i> Acordes Brasil e.V.i.G.
   </div>
+
   <p>Brasilianischer Chor in Frankfurt am Main</p>
+
   <div class="footer-links">
-    <a id="impressumLink">Impressum</a>
-    <a id="datenschutzLink">Datenschutzerklärung</a>
+    <button id="impressumLink">Impressum</button>
+    <button id="datenschutzLink">Datenschutzerklärung</button>
   </div>
+
   <div class="social-links">
-    <a href="#"><i class="fab fa-instagram"></i></a>
-    <a href="#"><i class="fab fa-facebook"></i></a>
-    <a href="#"><i class="fab fa-youtube"></i></a>
+    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+    <a href="#" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+    <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
   </div>
-  <p style="opacity:0.7; font-size:0.9rem;">© 2025 Acordes Brasil</p>
+
+  <p class="footer-copy">© 2026 Acordes Brasil e.V.i.G.</p>
 </footer>
 
-<script type="module" src="../src/js/app.js"></script>
+
+<!-- =========================================================
+     APP SCRIPT
+========================================================= -->
+<script type="module" src="/src/js/app.js"></script>
+
+<!-- Lazy Load FullCalendar -->
+<script>
+  window.addEventListener('load', () => {
+    const script = document.createElement('script');
+    script.src = "https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js";
+    document.body.appendChild(script);
+
+    const locales = document.createElement('script');
+    locales.src = "https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/locales-all.global.min.js";
+    document.body.appendChild(locales);
+  });
+</script>
+
 </body>
 </html>
