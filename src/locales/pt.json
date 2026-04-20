@@ -1,0 +1,48 @@
+{
+  "app": {
+    "name": "Acordes Brasil",
+    "tagline": "Coro Brasileiro em Frankfurt a.M."
+  },
+  "nav": {
+    "home": "Início",
+    "choir": "O Coro",
+    "concerts": "Concertos",
+    "repertoire": "Repertório",
+    "gallery": "Galeria",
+    "join": "Participe",
+    "member": "Área de Membros"
+  },
+  "hero": {
+    "title": "Acordes Brasil",
+    "subtitle": "Coro Brasileiro em Frankfurt a.M.",
+    "discover": "Descubra o próximo concerto"
+  },
+  "concerts": {
+    "title": "Próximos Concertos",
+    "noConcerts": "Nenhum concerto agendado.",
+    "tickets": "Ingressos",
+    "date": "Data",
+    "time": "Horário",
+    "location": "Local"
+  },
+  "member": {
+    "welcome": "Bem-vindo à área de membros",
+    "logout": "Sair",
+    "profile": "Meu Perfil",
+    "calendar": "Calendário",
+    "pushPrompt": "Receba notificações sobre ensaios e concertos",
+    "activatePush": "Ativar notificações"
+  },
+  "common": {
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "add": "Adicionar",
+    "close": "Fechar",
+    "confirm": "Confirmar",
+    "yes": "Sim",
+    "no": "Não",
+    "loading": "Carregando..."
+  }
+}
