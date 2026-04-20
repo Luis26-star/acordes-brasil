@@ -1,18 +1,58 @@
-import { defineConfig } from 'vite';
+{
+  "name": "acordes-brasil",
+  "version": "2.0.0",
+  "description": "Chorverwaltungs-App für Acordes Brasil – Brasilianischer Chor in Frankfurt am Main",
+  "type": "module",
+  "private": true,
 
-export default defineConfig({
-  root: 'public',
-  build: {
-    outDir: '../dist',
-    emptyOutDir: true,
-    rollupOptions: {
-      input: {
-        main: 'public/index.html'
-      }
-    }
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "deploy": "npm run build && gh-pages -d dist",
+    "clean": "rm -rf dist"
   },
-  server: {
-    port: 3000,
-    open: true
+
+  "dependencies": {
+    "@fullcalendar/core": "^6.1.11",
+    "@fullcalendar/daygrid": "^6.1.11",
+    "@fullcalendar/interaction": "^6.1.11",
+    "@fullcalendar/list": "^6.1.11",
+    "@fullcalendar/timegrid": "^6.1.11",
+    "@supabase/supabase-js": "^2.43.0",
+    "chart.js": "^4.4.1"
+  },
+
+  "devDependencies": {
+    "gh-pages": "^6.1.1",
+    "vite": "^5.2.0"
+  },
+
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Luis26-star/acordes-brasil.git"
+  },
+
+  "bugs": {
+    "url": "https://github.com/Luis26-star/acordes-brasil/issues"
+  },
+
+  "homepage": "https://luis26-star.github.io/acordes-brasil/",
+
+  "keywords": [
+    "chor",
+    "chorverwaltung",
+    "verein",
+    "brasilianisch",
+    "frankfurt",
+    "pwa",
+    "supabase"
+  ],
+
+  "author": "Acordes Brasil e.V.i.G.",
+  "license": "AGPL-3.0",
+
+  "engines": {
+    "node": ">=18"
   }
-});
+}
