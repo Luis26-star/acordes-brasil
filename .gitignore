@@ -1,0 +1,55 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Build output
+dist/
+build/
+out/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Supabase
+supabase/.temp/
+
+# Audio files (zu groß für GitHub)
+src/assets/audio/repertoire/*.mp3
+src/assets/audio/repertoire/*.wav
+
+# Uploaded documents
+src/assets/documents/contracts/signed/
+uploads/
+
+# Cache
+.cache/
+.parcel-cache/
