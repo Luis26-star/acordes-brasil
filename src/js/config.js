@@ -1,18 +1,40 @@
 // ========== KONFIGURATION ==========
+
+/* =========================================================
+   ENV (sicher auslesen)
+========================================================= */
+const ENV = typeof import.meta !== 'undefined' ? import.meta.env : {};
+
+/* =========================================================
+   BASIS CONFIG
+========================================================= */
 export const CONFIG = {
-  SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL || 'https://YOUR_PROJECT.supabase.co',
-  SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY || 'YOUR_ANON_KEY',
-  VAPID_PUBLIC_KEY: import.meta.env.VITE_VAPID_PUBLIC_KEY || '',
-  APP_NAME: 'Acordes Brasil',
-  APP_VERSION: '2.0.0',
-  DEFAULT_LANGUAGE: 'de',
-  SUPPORTED_LANGUAGES: ['de', 'en', 'pt'],
+  APP: {
+    NAME: 'Acordes Brasil',
+    VERSION: '2.0.0'
+  },
+
+  SUPABASE: {
+    URL: ENV.VITE_SUPABASE_URL || '',
+    ANON_KEY: ENV.VITE_SUPABASE_ANON_KEY || ''
+  },
+
+  PUSH: {
+    VAPID_PUBLIC_KEY: ENV.VITE_VAPID_PUBLIC_KEY || ''
+  },
+
+  I18N: {
+    DEFAULT_LANGUAGE: 'de',
+    SUPPORTED_LANGUAGES: ['de', 'en', 'pt']
+  },
+
   FEATURES: {
     PUSH_NOTIFICATIONS: true,
     OFFLINE_MODE: true,
     DARK_MODE: false,
     DEMO_MODE: false
   },
+
   DEFAULTS: {
     FEE_NORMAL: 120,
     FEE_REDUCED: 60,
@@ -23,13 +45,37 @@ export const CONFIG = {
   }
 };
 
-export const { SUPABASE_URL, SUPABASE_ANON_KEY, APP_NAME, DEFAULT_LANGUAGE, FEATURES, DEFAULTS } = CONFIG;
 
+/* =========================================================
+   SHORTCUT EXPORTS
+========================================================= */
+export const {
+  SUPABASE,
+  APP,
+  I18N,
+  FEATURES,
+  DEFAULTS
+} = CONFIG;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+/**
+ * Prüft, ob Supabase korrekt konfiguriert ist
+ */
 export const isSupabaseConfigured = () => {
-  return SUPABASE_URL !== 'https://YOUR_PROJECT.supabase.co' && 
-         SUPABASE_ANON_KEY !== 'YOUR_ANON_KEY';
+  return Boolean(
+    SUPABASE.URL &&
+    SUPABASE.ANON_KEY &&
+    !SUPABASE.URL.includes('YOUR_PROJECT')
+  );
 };
 
+/**
+ * Demo-Modus (Fallback wenn Backend fehlt)
+ */
 export const isDemoMode = () => {
   return FEATURES.DEMO_MODE || !isSupabaseConfigured();
 };
