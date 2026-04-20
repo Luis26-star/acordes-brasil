@@ -1,4 +1,48 @@
+/* =========================================================
+   ROBOTS.TXT – PRODUCTION READY
+   Acordes Brasil (2026)
+========================================================= */
+
 User-agent: *
 Allow: /
 
+# --- SENSITIVE AREAS ---
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /members/
+Disallow: /api/
+Disallow: /auth/
+Disallow: /private/
+
+# --- SYSTEM FILES ---
+Disallow: /config/
+Disallow: /scripts/
+Disallow: /node_modules/
+
+# --- PARAMETERS / DUPLICATES ---
+Disallow: /*?*
+
+# --- SITEMAP ---
 Sitemap: https://acordesbrasil.de/sitemap.xml
+
+
+/* =========================================================
+   OPTIONAL: GOOGLE BOT (fine tuning)
+========================================================= */
+
+User-agent: Googlebot
+Allow: /
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /members/
+
+
+/* =========================================================
+   OPTIONAL: BLOCK BAD BOTS
+========================================================= */
+
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
