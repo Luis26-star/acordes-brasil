@@ -1,0 +1,48 @@
+{
+  "app": {
+    "name": "Acordes Brasil",
+    "tagline": "Brasilianischer Chor in Frankfurt a.M."
+  },
+  "nav": {
+    "home": "Start",
+    "choir": "Der Chor",
+    "concerts": "Konzerte",
+    "repertoire": "Repertoire",
+    "gallery": "Galerie",
+    "join": "Mitmachen",
+    "member": "Mitgliederbereich"
+  },
+  "hero": {
+    "title": "Acordes Brasil",
+    "subtitle": "Brasilianischer Chor in Frankfurt a.M.",
+    "discover": "Nächstes Konzert entdecken"
+  },
+  "concerts": {
+    "title": "Nächste Konzerte",
+    "noConcerts": "Keine anstehenden Konzerte.",
+    "tickets": "Tickets",
+    "date": "Datum",
+    "time": "Uhrzeit",
+    "location": "Ort"
+  },
+  "member": {
+    "welcome": "Willkommen im Mitgliederbereich",
+    "logout": "Abmelden",
+    "profile": "Mein Profil",
+    "calendar": "Kalender",
+    "pushPrompt": "Erhalten Sie Benachrichtigungen über Proben und Konzerte",
+    "activatePush": "Benachrichtigungen aktivieren"
+  },
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "add": "Hinzufügen",
+    "close": "Schließen",
+    "confirm": "Bestätigen",
+    "yes": "Ja",
+    "no": "Nein",
+    "loading": "Laden..."
+  }
+}
