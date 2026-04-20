@@ -1,0 +1,48 @@
+{
+  "app": {
+    "name": "Acordes Brasil",
+    "tagline": "Brazilian Choir in Frankfurt a.M."
+  },
+  "nav": {
+    "home": "Home",
+    "choir": "The Choir",
+    "concerts": "Concerts",
+    "repertoire": "Repertoire",
+    "gallery": "Gallery",
+    "join": "Join",
+    "member": "Member Area"
+  },
+  "hero": {
+    "title": "Acordes Brasil",
+    "subtitle": "Brazilian Choir in Frankfurt a.M.",
+    "discover": "Discover next concert"
+  },
+  "concerts": {
+    "title": "Upcoming Concerts",
+    "noConcerts": "No upcoming concerts.",
+    "tickets": "Tickets",
+    "date": "Date",
+    "time": "Time",
+    "location": "Location"
+  },
+  "member": {
+    "welcome": "Welcome to the member area",
+    "logout": "Logout",
+    "profile": "My Profile",
+    "calendar": "Calendar",
+    "pushPrompt": "Receive notifications about rehearsals and concerts",
+    "activatePush": "Activate notifications"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "close": "Close",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "loading": "Loading..."
+  }
+}
