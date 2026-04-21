@@ -1,54 +1,37 @@
 /* =========================================================
-   OFFLINE MODULE – FINAL (SENIOR LEVEL)
+   APP.JS – CLEAN SENIOR VERSION
 ========================================================= */
 
-const DB_NAME = 'choir-db';
-const STORE_NAME = 'queue';
-
-export async function sendOrQueue(url, body) {
-  if (navigator.onLine) {
-    return fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
-  }
-
-  const db = await openDB();
-
-  const tx = db.transaction(STORE_NAME, 'readwrite');
-  const store = tx.objectStore(STORE_NAME);
-
-  await store.add({
-    id: Date.now(),
-    url,
-    method: 'POST',
-    body
-  });
-
-  const reg = await navigator.serviceWorker.ready;
-  await reg.sync.register('sync-rehearsals');
-
-  console.info('📡 Offline gespeichert → wird später gesendet');
-}
+import { sendOrQueue } from './modules/offline.js';
 
 
 /* =========================================================
-   DB INIT (ROBUST!)
+   CONFIG
 ========================================================= */
-function openDB() {
-  return new Promise((resolve, reject) => {
-    const req = indexedDB.open(DB_NAME, 1);
+const CONFIG = {
+  DEFAULT_LANGUAGE: 'de',
+  STORAGE_KEY: 'choir-app',
+  SUPABASE_URL: '',
+  SUPABASE_ANON_KEY: ''
+};
 
-    req.onupgradeneeded = () => {
-      const db = req.result;
 
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME, { keyPath: 'id' });
-      }
-    };
+/* =========================================================
+   UTILS
+========================================================= */
+const qs = (s) => document.querySelector(s);
 
-    req.onsuccess = () => resolve(req.result);
-    req.onerror = () => reject(req.error);
-  });
+
+/* =========================================================
+   APP CLASS (AUSZUG – DEIN BESTEHENDER CODE BLEIBT)
+========================================================= */
+class App {
+  constructor() {
+    this.state = {};
+  }
+
+  async createEvent(data) {
+    // 👉 HIER wird Offline genutzt
+    await sendOrQueue('/api/events', data);
+  }
 }
