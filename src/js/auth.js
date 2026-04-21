@@ -1,5 +1,5 @@
 /* =========================================================
-   AUTH MODULE – PRODUCTION READY
+   AUTH MODULE – SENIOR / PRODUCTION LEVEL
    Acordes Brasil e.V.i.G.
 ========================================================= */
 
@@ -16,6 +16,8 @@ export class AuthModule {
       password: document.getElementById('loginPassword'),
       error: document.getElementById('loginError')
     };
+
+    this.isLoading = false;
   }
 
 
@@ -24,18 +26,21 @@ export class AuthModule {
   ========================================================= */
   init() {
     this.bindEvents();
+    this.listenToAuthChanges();
   }
 
 
   /* =========================================================
-     SESSION CHECK
+     SESSION CHECK (Initial Load)
   ========================================================= */
   async checkSession() {
     try {
-      const { data } = await this.app.supabase.auth.getSession();
+      const { data, error } = await this.app.supabase.auth.getSession();
+
+      if (error) throw error;
 
       if (data?.session?.user) {
-        this.onLoginSuccess(data.session.user);
+        this.onLoginSuccess(data.session.user, { silent: true });
       } else {
         this.app.showPublicContent();
       }
@@ -43,6 +48,23 @@ export class AuthModule {
       console.warn('Session check failed:', err);
       this.app.showPublicContent();
     }
+  }
+
+
+  /* =========================================================
+     AUTH LISTENER (Realtime)
+  ========================================================= */
+  listenToAuthChanges() {
+    this.app.supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session?.user) {
+        this.onLoginSuccess(session.user, { silent: true });
+      }
+
+      if (event === 'SIGNED_OUT') {
+        this.app.state.user = null;
+        this.app.showPublicContent();
+      }
+    });
   }
 
 
@@ -57,12 +79,10 @@ export class AuthModule {
       this.login();
     });
 
-    // ESC schließen
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') this.hideLogin();
     });
 
-    // Klick außerhalb schließt Modal
     this.ui.overlay?.addEventListener('click', (e) => {
       if (e.target === this.ui.overlay) this.hideLogin();
     });
@@ -70,9 +90,11 @@ export class AuthModule {
 
 
   /* =========================================================
-     LOGIN FLOW
+     LOGIN
   ========================================================= */
   async login() {
+    if (this.isLoading) return;
+
     const email = this.ui.email.value.trim();
     const password = this.ui.password.value.trim();
 
@@ -94,8 +116,7 @@ export class AuthModule {
       this.onLoginSuccess(data.user);
 
     } catch (err) {
-      this.showError('Login fehlgeschlagen. Bitte prüfen.');
-      console.error(err);
+      this.handleAuthError(err);
     } finally {
       this.setLoading(false);
     }
@@ -105,19 +126,19 @@ export class AuthModule {
   /* =========================================================
      SUCCESS
   ========================================================= */
-  async onLoginSuccess(user) {
+  async onLoginSuccess(user, options = {}) {
     this.app.state.user = user;
 
-    this.hideLogin();
-    this.clearForm();
+    if (!options.silent) {
+      this.hideLogin();
+      this.clearForm();
+    }
 
-    // 👉 Push Subscription (optional)
+    // Push Subscription (non-blocking)
     try {
-      if (this.app.modules?.push) {
-        this.app.modules.push.subscribe(user);
-      }
+      this.app.modules?.push?.subscribe(user);
     } catch (err) {
-      console.warn('Push subscribe fehlgeschlagen:', err);
+      console.warn('Push failed:', err);
     }
 
     this.app.showMemberDashboard();
@@ -128,14 +149,35 @@ export class AuthModule {
      LOGOUT
   ========================================================= */
   async logout() {
-    await this.app.supabase.auth.signOut();
-    this.app.state.user = null;
-    this.app.showPublicContent();
+    try {
+      await this.app.supabase.auth.signOut();
+      this.app.state.user = null;
+      this.app.showPublicContent();
+    } catch (err) {
+      console.error('Logout error:', err);
+    }
   }
 
 
   /* =========================================================
-     UI HELPERS
+     ERROR HANDLING (Supabase aware)
+  ========================================================= */
+  handleAuthError(err) {
+    console.error(err);
+
+    const msgMap = {
+      'Invalid login credentials': 'Falsche E-Mail oder Passwort.',
+      'Email not confirmed': 'Bitte bestätige deine E-Mail.',
+      'Too many requests': 'Zu viele Versuche. Bitte später erneut.'
+    };
+
+    const message = msgMap[err.message] || 'Login fehlgeschlagen.';
+    this.showError(message);
+  }
+
+
+  /* =========================================================
+     UI
   ========================================================= */
   showLogin() {
     this.ui.overlay?.classList.add('is-active');
@@ -157,6 +199,8 @@ export class AuthModule {
   }
 
   setLoading(state) {
+    this.isLoading = state;
+
     if (!this.ui.form) return;
 
     this.ui.form.classList.toggle('is-loading', state);
@@ -166,5 +210,18 @@ export class AuthModule {
       btn.disabled = state;
       btn.textContent = state ? 'Anmelden…' : 'Anmelden';
     }
+  }
+
+
+  /* =========================================================
+     OPTIONAL (Future ready)
+========================================================= */
+
+  async register(email, password) {
+    return this.app.supabase.auth.signUp({ email, password });
+  }
+
+  async resetPassword(email) {
+    return this.app.supabase.auth.resetPasswordForEmail(email);
   }
 }
