@@ -1,4 +1,54 @@
 /* =========================================================
+   BACKGROUND SYNC (Offline Queue)
+========================================================= */
+
+const SYNC_TAG = 'sync-rehearsals';
+
+self.addEventListener('sync', (event) => {
+  if (event.tag === SYNC_TAG) {
+    event.waitUntil(processQueue());
+  }
+});
+
+async function processQueue() {
+  const db = await openDB();
+  const tx = db.transaction('queue', 'readwrite');
+  const store = tx.objectStore('queue');
+
+  const all = await store.getAll();
+
+  for (const item of all) {
+    try {
+      await fetch(item.url, {
+        method: item.method,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(item.body)
+      });
+
+      store.delete(item.id);
+    } catch (err) {
+      console.warn('Retry später:', err);
+    }
+  }
+}
+
+
+/* =========================================================
+   INDEXEDDB (für Offline Queue)
+========================================================= */
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const req = indexedDB.open('choir-db', 1);
+
+    req.onupgradeneeded = () => {
+      req.result.createObjectStore('queue', { keyPath: 'id' });
+    };
+
+    req.onsuccess = () => resolve(req.result);
+    req.onerror = () => reject(req.error);
+  });
+}
+/* =========================================================
    SERVICE WORKER – PRODUCTION READY (2026)
    Acordes Brasil e.V.i.G.
 ========================================================= */
