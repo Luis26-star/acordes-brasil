@@ -378,4 +378,33 @@ button {
   .modal__box {
     width: 95%;
   }
+   .c-sync {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  background: var(--gray-900);
+  color: white;
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 9999;
+}
+
+.c-sync__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #16a34a; /* grün */
+}
+
+.c-sync--pending .c-sync__dot {
+  background: #eab308;
+}
+
+.c-sync--error .c-sync__dot {
+  background: #dc2626;
+}
 }
