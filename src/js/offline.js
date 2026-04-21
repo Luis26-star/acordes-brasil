@@ -5,6 +5,42 @@
 const DB_NAME = 'choir-db';
 const STORE = 'queue';
 
+// IMPORT hinzufügen
+import { SyncUI } from './sync-ui.js';
+
+const syncUI = new SyncUI();
+
+export async function supabaseInsertOrQueue(app, table, payload) {
+  if (navigator.onLine && app.supabase) {
+    const { error } = await app.supabase
+      .from(table)
+      .insert(payload);
+
+    if (error) {
+      syncUI.setState('error');
+      throw error;
+    }
+
+    syncUI.setState('success');
+    return;
+  }
+
+  syncUI.setState('pending');
+
+  const db = await openDB();
+  const tx = db.transaction('queue', 'readwrite');
+  const store = tx.objectStore('queue');
+
+  await store.add({
+    id: Date.now(),
+    type: 'insert',
+    table,
+    payload
+  });
+
+  const reg = await navigator.serviceWorker.ready;
+  await reg.sync.register('sync-supabase');
+}
 export async function supabaseInsertOrQueue(app, table, payload) {
   if (navigator.onLine && app.supabase) {
     const { error } = await app.supabase
