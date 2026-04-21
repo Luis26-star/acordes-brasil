@@ -1,8 +1,9 @@
 /* =========================================================
-   APP.JS – FINAL SENIOR VERSION (SUPABASE + OFFLINE)
+   APP.JS – FINAL SENIOR VERSION (SUPABASE + OFFLINE + SYNC UI)
 ========================================================= */
 
 import { supabaseInsertOrQueue } from './modules/offline.js';
+import { SyncUI } from './modules/sync-ui.js';
 
 /* =========================================================
    CONFIG
@@ -22,6 +23,7 @@ class App {
     };
 
     this.supabase = null;
+    this.syncUI = null;
   }
 
   /* =========================================================
@@ -29,9 +31,13 @@ class App {
   ========================================================= */
   async init() {
     this.initSupabase();
-    this.registerServiceWorker();
+    await this.registerServiceWorker();
+    this.initSyncUI();
   }
 
+  /* =========================================================
+     SUPABASE
+  ========================================================= */
   initSupabase() {
     if (CONFIG.SUPABASE_URL && CONFIG.SUPABASE_ANON_KEY) {
       this.supabase = supabase.createClient(
@@ -43,10 +49,32 @@ class App {
     }
   }
 
+  /* =========================================================
+     SERVICE WORKER
+  ========================================================= */
   async registerServiceWorker() {
-    if ('serviceWorker' in navigator) {
+    if (!('serviceWorker' in navigator)) return;
+
+    try {
       await navigator.serviceWorker.register('/service-worker.js');
+    } catch (err) {
+      console.error('SW Registrierung fehlgeschlagen:', err);
     }
+  }
+
+  /* =========================================================
+     SYNC UI
+  ========================================================= */
+  initSyncUI() {
+    this.syncUI = new SyncUI();
+
+    if (!('serviceWorker' in navigator)) return;
+
+    navigator.serviceWorker.addEventListener('message', (event) => {
+      if (event.data?.type === 'SYNC_STATUS') {
+        this.syncUI.setState(event.data.status);
+      }
+    });
   }
 
   /* =========================================================
@@ -55,9 +83,13 @@ class App {
   async createEvent(data) {
     try {
       await supabaseInsertOrQueue(this, 'events', data);
+
       console.log('✅ Event gespeichert (online oder offline)');
+      this.syncUI?.setState('pending');
+
     } catch (err) {
       console.error('❌ Fehler beim Speichern', err);
+      this.syncUI?.setState('error');
     }
   }
 }
@@ -67,4 +99,7 @@ class App {
 ========================================================= */
 const app = new App();
 window.app = app;
-document.addEventListener('DOMContentLoaded', () => app.init());
+
+document.addEventListener('DOMContentLoaded', () => {
+  app.init();
+});
