@@ -1,40 +1,41 @@
 /* =========================================================
-   OFFLINE MODULE – FINAL (SENIOR LEVEL)
+   OFFLINE MODULE – SUPABASE QUEUE (FINAL)
 ========================================================= */
 
 const DB_NAME = 'choir-db';
-const STORE_NAME = 'queue';
+const STORE = 'queue';
 
-export async function sendOrQueue(url, body) {
-  if (navigator.onLine) {
-    return fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body)
-    });
+export async function supabaseInsertOrQueue(app, table, payload) {
+  if (navigator.onLine && app.supabase) {
+    const { error } = await app.supabase
+      .from(table)
+      .insert(payload);
+
+    if (error) throw error;
+    return;
   }
 
   const db = await openDB();
 
-  const tx = db.transaction(STORE_NAME, 'readwrite');
-  const store = tx.objectStore(STORE_NAME);
+  const tx = db.transaction(STORE, 'readwrite');
+  const store = tx.objectStore(STORE);
 
   await store.add({
     id: Date.now(),
-    url,
-    method: 'POST',
-    body
+    type: 'insert',
+    table,
+    payload
   });
 
   const reg = await navigator.serviceWorker.ready;
-  await reg.sync.register('sync-rehearsals');
+  await reg.sync.register('sync-supabase');
 
-  console.info('📡 Offline gespeichert → wird später gesendet');
+  console.info('📡 Offline gespeichert → Sync folgt');
 }
 
 
 /* =========================================================
-   DB INIT (ROBUST!)
+   DB INIT
 ========================================================= */
 function openDB() {
   return new Promise((resolve, reject) => {
@@ -43,8 +44,8 @@ function openDB() {
     req.onupgradeneeded = () => {
       const db = req.result;
 
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+      if (!db.objectStoreNames.contains(STORE)) {
+        db.createObjectStore(STORE, { keyPath: 'id' });
       }
     };
 
