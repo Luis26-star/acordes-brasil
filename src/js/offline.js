@@ -1,6 +1,9 @@
 /* =========================================================
-   OFFLINE MODULE – SENIOR LEVEL
+   OFFLINE MODULE – FINAL (SENIOR LEVEL)
 ========================================================= */
+
+const DB_NAME = 'choir-db';
+const STORE_NAME = 'queue';
 
 export async function sendOrQueue(url, body) {
   if (navigator.onLine) {
@@ -13,8 +16,8 @@ export async function sendOrQueue(url, body) {
 
   const db = await openDB();
 
-  const tx = db.transaction('queue', 'readwrite');
-  const store = tx.objectStore('queue');
+  const tx = db.transaction(STORE_NAME, 'readwrite');
+  const store = tx.objectStore(STORE_NAME);
 
   await store.add({
     id: Date.now(),
@@ -31,17 +34,17 @@ export async function sendOrQueue(url, body) {
 
 
 /* =========================================================
-   DB (robust)
+   DB INIT (ROBUST!)
 ========================================================= */
 function openDB() {
   return new Promise((resolve, reject) => {
-    const req = indexedDB.open('choir-db', 1);
+    const req = indexedDB.open(DB_NAME, 1);
 
     req.onupgradeneeded = () => {
       const db = req.result;
 
-      if (!db.objectStoreNames.contains('queue')) {
-        db.createObjectStore('queue', { keyPath: 'id' });
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME, { keyPath: 'id' });
       }
     };
 
