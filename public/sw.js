@@ -1,5 +1,5 @@
 /* =========================================================
-   SERVICE WORKER – SUPABASE SYNC FINAL
+   SERVICE WORKER – SUPABASE SYNC FINAL (CLEAN)
 ========================================================= */
 
 const DB_NAME = 'choir-db';
@@ -20,7 +20,6 @@ self.addEventListener('sync', (event) => {
 ========================================================= */
 async function processQueue() {
   const db = await openDB();
-
   const tx = db.transaction(STORE, 'readwrite');
   const store = tx.objectStore(STORE);
 
@@ -28,8 +27,7 @@ async function processQueue() {
 
   for (const item of all) {
     try {
-      // 👉 Supabase REST API (wichtig!)
-      await fetch(`${self.location.origin}/rest/v1/${item.table}`, {
+      const res = await fetch(`${self.location.origin}/rest/v1/${item.table}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -39,10 +37,17 @@ async function processQueue() {
         body: JSON.stringify(item.payload)
       });
 
-      store.delete(item.id);
+      if (!res.ok) {
+        throw new Error(`HTTP ${res.status}`);
+      }
+
+      await store.delete(item.id);
+
+      notifyClient('success');
 
     } catch (err) {
-      console.error('❌ Sync fehlgeschlagen', err);
+      console.error('❌ Sync fehlgeschlagen:', err);
+      notifyClient('error');
     }
   }
 }
@@ -65,5 +70,20 @@ function openDB() {
 
     req.onsuccess = () => resolve(req.result);
     req.onerror = () => reject(req.error);
+  });
+}
+
+
+/* =========================================================
+   MESSAGE TO UI
+========================================================= */
+function notifyClient(status) {
+  self.clients.matchAll({ includeUncontrolled: true }).then(clients => {
+    clients.forEach(client => {
+      client.postMessage({
+        type: 'SYNC_STATUS',
+        status
+      });
+    });
   });
 }
