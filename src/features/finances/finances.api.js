@@ -4,24 +4,35 @@ import { supabase } from '../../lib/supabase.js';
 export class FinanceModule {
   constructor() {
     this.container = document.getElementById('feePaymentsList');
+    this.currentYear = new Date().getFullYear();
+  }
+
+  // ================= INIT =================
+  init() {
+    if (!this.container) {
+      console.warn('[FinanceModule] Container fehlt (#feePaymentsList)');
+    }
   }
 
   // ================= OVERVIEW =================
-  async loadOverview(year = new Date().getFullYear()) {
+  async loadOverview(year = this.currentYear) {
     try {
-      const [{ data: payments, error: pError }, { data: donations, error: dError }] =
-        await Promise.all([
-          supabase.from('fee_payments').select('*').eq('fee_year', year),
-          supabase.from('donations').select('*').eq('year', year)
-        ]);
+      const [paymentsRes, donationsRes] = await Promise.all([
+        supabase.from('fee_payments').select('amount, status').eq('fee_year', year),
+        supabase.from('donations').select('amount').eq('year', year)
+      ]);
 
-      if (pError || dError) throw pError || dError;
+      if (paymentsRes.error) throw paymentsRes.error;
+      if (donationsRes.error) throw donationsRes.error;
+
+      const payments = paymentsRes.data ?? [];
+      const donations = donationsRes.data ?? [];
 
       const totalFees = this.sum(payments);
       const totalDonations = this.sum(donations);
 
       const paidFees = this.sum(
-        payments?.filter(p => p.status === 'paid')
+        payments.filter(p => p.status === 'paid')
       );
 
       return {
@@ -29,23 +40,29 @@ export class FinanceModule {
         totalDonations,
         paidFees,
         pendingFees: Math.max(totalFees - paidFees, 0),
-        paymentRate: totalFees > 0 ? Math.round((paidFees / totalFees) * 100) : 0
+        paymentRate: totalFees > 0
+          ? Math.round((paidFees / totalFees) * 100)
+          : 0
       };
 
     } catch (err) {
       console.error('[FinanceOverview]', err);
-      return {
-        totalFees: 0,
-        totalDonations: 0,
-        paidFees: 0,
-        pendingFees: 0,
-        paymentRate: 0
-      };
+      return this.emptyOverview();
     }
   }
 
+  emptyOverview() {
+    return {
+      totalFees: 0,
+      totalDonations: 0,
+      paidFees: 0,
+      pendingFees: 0,
+      paymentRate: 0
+    };
+  }
+
   // ================= LIST =================
-  async loadFeePayments(year = new Date().getFullYear()) {
+  async loadFeePayments(year = this.currentYear) {
     if (!this.container) return;
 
     this.setLoading();
@@ -63,22 +80,25 @@ export class FinanceModule {
       if (error) throw error;
 
       if (!data?.length) {
-        this.container.innerHTML = `<tr><td colspan="5">Keine Zahlungen gefunden.</td></tr>`;
+        this.container.innerHTML =
+          `<tr><td colspan="5">Keine Zahlungen gefunden.</td></tr>`;
         return;
       }
 
       this.container.innerHTML = data.map(p => this.rowTemplate(p)).join('');
-
       this.bindEvents();
 
     } catch (err) {
-      console.error(err);
-      this.container.innerHTML = `<tr><td colspan="5">Fehler beim Laden</td></tr>`;
+      console.error('[loadFeePayments]', err);
+      this.container.innerHTML =
+        `<tr><td colspan="5">Fehler beim Laden</td></tr>`;
     }
   }
 
   // ================= ACTIONS =================
   async markAsPaid(paymentId) {
+    if (!paymentId) return;
+
     try {
       const { error } = await supabase
         .from('fee_payments')
@@ -93,20 +113,27 @@ export class FinanceModule {
       await this.loadFeePayments();
 
     } catch (err) {
-      console.error(err);
+      console.error('[markAsPaid]', err);
       alert('Zahlung konnte nicht aktualisiert werden');
     }
   }
 
   generateReceipt(paymentId) {
-    // TODO: später PDF / Download
+    // Placeholder für später (PDF, Download etc.)
+    console.info('[generateReceipt]', paymentId);
     alert(`Quittung für Zahlung #${paymentId}`);
   }
 
   async addDonation(donationData) {
+    if (!donationData?.date) {
+      alert('Datum fehlt');
+      return false;
+    }
+
     try {
       const payload = {
         ...donationData,
+        amount: Number(donationData.amount) || 0,
         year: new Date(donationData.date).getFullYear()
       };
 
@@ -119,7 +146,7 @@ export class FinanceModule {
       return true;
 
     } catch (err) {
-      console.error(err);
+      console.error('[addDonation]', err);
       alert('Spende konnte nicht gespeichert werden');
       return false;
     }
@@ -146,29 +173,37 @@ export class FinanceModule {
 
   bindEvents() {
     this.container.querySelectorAll('[data-pay]').forEach(btn =>
-      btn.addEventListener('click', () => this.markAsPaid(btn.dataset.pay))
+      btn.addEventListener('click', () =>
+        this.markAsPaid(btn.dataset.pay)
+      )
     );
 
     this.container.querySelectorAll('[data-receipt]').forEach(btn =>
-      btn.addEventListener('click', () => this.generateReceipt(btn.dataset.receipt))
+      btn.addEventListener('click', () =>
+        this.generateReceipt(btn.dataset.receipt)
+      )
     );
   }
 
   // ================= HELPERS =================
   setLoading() {
-    this.container.innerHTML = `<tr><td colspan="5">Laden...</td></tr>`;
+    this.container.innerHTML =
+      `<tr><td colspan="5">Laden...</td></tr>`;
   }
 
   sum(arr = []) {
-    return arr.reduce((sum, item) => sum + (Number(item.amount) || 0), 0);
+    return arr.reduce((sum, item) =>
+      sum + (Number(item?.amount) || 0), 0
+    );
   }
 
   formatCurrency(value) {
-    return `${(value || 0).toFixed(2)} €`;
+    return `${(Number(value) || 0).toFixed(2)} €`;
   }
 
   formatDate(date) {
     if (!date) return '—';
+
     try {
       return new Date(date).toLocaleDateString('de-DE');
     } catch {
