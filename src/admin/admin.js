@@ -1,3 +1,4 @@
+import { renderBoardDashboard } from '../features/board/board.ui.js';
 import { supabase } from '../lib/supabase.js';
 import { applyBranding } from './modules/apply-branding.js';
 import Chart from 'chart.js/auto';
@@ -45,7 +46,7 @@ class AdminApp {
     }
   }
 
-  // ================= UI BINDING =================
+  // ================= UI =================
   bindUI() {
     // Logout
     document.getElementById('logoutBtn')?.addEventListener('click', async () => {
@@ -77,9 +78,10 @@ class AdminApp {
     document.querySelectorAll('.tab-btn, .panel').forEach(el => el.classList.remove('active'));
 
     btn.classList.add('active');
-    document.getElementById(`${btn.dataset.tab}Panel`).classList.add('active');
+    document.getElementById(`${btn.dataset.tab}Panel`)?.classList.add('active');
 
     if (btn.dataset.tab === 'finances') this.loadFinances();
+    if (btn.dataset.tab === 'board') renderBoardDashboard(); // ✅ FIX
   }
 
   // ================= MEMBERS =================
@@ -91,20 +93,22 @@ class AdminApp {
 
     if (error) return this.handleError(error);
 
+    const members = data || [];
     const tbody = document.getElementById('membersTableBody');
+    if (!tbody) return;
 
-    if (!data?.length) {
+    if (!members.length) {
       tbody.innerHTML = `<tr><td colspan="6">Keine Mitglieder</td></tr>`;
       return;
     }
 
-    tbody.innerHTML = data.map(m => `
+    tbody.innerHTML = members.map(m => `
       <tr>
         <td>${this.escape(m.name)}</td>
         <td>${this.escape(m.email)}</td>
-        <td>${m.voice || '—'}</td>
-        <td><span class="badge badge-${m.role}">${m.role}</span></td>
-        <td><span class="badge badge-${m.status}">${m.status}</span></td>
+        <td>${this.escape(m.voice || '—')}</td>
+        <td><span class="badge badge-${this.escape(m.role)}">${this.escape(m.role)}</span></td>
+        <td><span class="badge badge-${this.escape(m.status)}">${this.escape(m.status)}</span></td>
         <td>
           <button class="btn-icon" data-edit="${m.id}"><i class="fas fa-edit"></i></button>
           <button class="btn-icon danger" data-delete="${m.id}"><i class="fas fa-trash"></i></button>
@@ -112,7 +116,6 @@ class AdminApp {
       </tr>
     `).join('');
 
-    // Events binden (kein inline JS!)
     tbody.querySelectorAll('[data-edit]').forEach(btn => {
       btn.addEventListener('click', () => this.editMember(btn.dataset.edit));
     });
@@ -142,7 +145,6 @@ class AdminApp {
       : supabase.from('profiles').insert([{ id: crypto.randomUUID(), ...payload }]);
 
     const { error } = await query;
-
     if (error) return this.handleError(error);
 
     this.closeModal('memberModal');
@@ -186,20 +188,22 @@ class AdminApp {
 
     if (error) return this.handleError(error);
 
+    const events = data || [];
     const tbody = document.getElementById('eventsTableBody');
+    if (!tbody) return;
 
-    if (!data?.length) {
+    if (!events.length) {
       tbody.innerHTML = `<tr><td colspan="6">Keine Events</td></tr>`;
       return;
     }
 
-    tbody.innerHTML = data.map(e => `
+    tbody.innerHTML = events.map(e => `
       <tr>
         <td>${this.escape(e.title)}</td>
-        <td><span class="badge badge-${e.type}">${e.type}</span></td>
+        <td><span class="badge badge-${this.escape(e.type)}">${this.escape(e.type)}</span></td>
         <td>${new Date(e.starttime).toLocaleString()}</td>
         <td>${new Date(e.endtime).toLocaleString()}</td>
-        <td>${this.escape(e.location) || '—'}</td>
+        <td>${this.escape(e.location || '—')}</td>
         <td>
           <button class="btn-icon" data-edit="${e.id}"><i class="fas fa-edit"></i></button>
           <button class="btn-icon danger" data-delete="${e.id}"><i class="fas fa-trash"></i></button>
@@ -278,12 +282,17 @@ class AdminApp {
     const { data, error } = await supabase.from('feepayments').select('amount, status');
     if (error) return this.handleError(error);
 
-    const paid = data.filter(f => f.status === 'paid').reduce((s, f) => s + f.amount, 0);
-    const pending = data.filter(f => f.status === 'pending').reduce((s, f) => s + f.amount, 0);
+    const list = data || [];
+
+    const paid = list.filter(f => f.status === 'paid').reduce((s, f) => s + f.amount, 0);
+    const pending = list.filter(f => f.status === 'pending').reduce((s, f) => s + f.amount, 0);
 
     if (this.financeChart) this.financeChart.destroy();
 
-    const ctx = document.getElementById('financeChart').getContext('2d');
+    const canvas = document.getElementById('financeChart');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
 
     this.financeChart = new Chart(ctx, {
       type: 'doughnut',
@@ -301,9 +310,11 @@ class AdminApp {
     const { data, error } = await supabase.from('profiles').select('name, email, voice, status');
     if (error) return this.handleError(error);
 
+    const list = data || [];
+
     const csv = [
       'Name,Email,Stimme,Status',
-      ...data.map(p => `${p.name},${p.email},${p.voice},${p.status}`)
+      ...list.map(p => `${p.name},${p.email},${p.voice},${p.status}`)
     ].join('\n');
 
     const blob = new Blob([csv], { type: 'text/csv' });
@@ -328,11 +339,11 @@ class AdminApp {
   }
 
   showModal(id) {
-    document.getElementById(id).style.display = 'flex';
+    document.getElementById(id)?.style.display = 'flex';
   }
 
   closeModal(id) {
-    document.getElementById(id).style.display = 'none';
+    document.getElementById(id)?.style.display = 'none';
   }
 
   escape(str) {
