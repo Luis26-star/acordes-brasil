@@ -1,3 +1,57 @@
+import { supabase } from '../lib/supabase.js';
+import { applyBranding } from './modules/apply-branding.js';
+
+import { MembersUI } from '../features/members/members.ui.js';
+import { EventsUI } from '../features/events/events.ui.js';
+import { renderFinanceChart } from '../features/finances/finances.ui.js';
+import { renderBoardDashboard } from '../features/board/board.ui.js';
+
+class AdminApp {
+  constructor() {
+    this.members = new MembersUI();
+    this.events = new EventsUI();
+  }
+
+  async init() {
+    applyBranding();
+    await this.checkAuth();
+
+    this.bindUI();
+
+    await this.members.load();
+    await this.events.load();
+  }
+
+  async checkAuth() {
+    const { data } = await supabase.auth.getUser();
+    if (!data?.user) return (window.location.href = '/');
+  }
+
+  bindUI() {
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => this.switchTab(btn));
+    });
+
+    document.getElementById('logoutBtn')?.addEventListener('click', async () => {
+      await supabase.auth.signOut();
+      window.location.href = '/';
+    });
+  }
+
+  switchTab(btn) {
+    document.querySelectorAll('.tab-btn, .panel').forEach(el => el.classList.remove('active'));
+
+    btn.classList.add('active');
+    document.getElementById(`${btn.dataset.tab}Panel`)?.classList.add('active');
+
+    if (btn.dataset.tab === 'finances') renderFinanceChart();
+    if (btn.dataset.tab === 'board') renderBoardDashboard();
+  }
+}
+
+const app = new AdminApp();
+document.addEventListener('DOMContentLoaded', () => app.init());
+
 import { renderBoardDashboard } from '../features/board/board.ui.js';
 import { supabase } from '../lib/supabase.js';
 import { applyBranding } from './modules/apply-branding.js';
