@@ -1,4 +1,30 @@
 // ========== CALENDAR MODUL ==========
+import { supabase } from '../../lib/supabase.js';
+
+export async function fetchEvents() {
+  const { data, error } = await supabase
+    .from('events')
+    .select('*')
+    .order('starttime', { ascending: false });
+
+  if (error) throw error;
+  return data || [];
+}
+
+export async function saveEvent(id, payload) {
+  if (id) {
+    const { error } = await supabase.from('events').update(payload).eq('id', id);
+    if (error) throw error;
+  } else {
+    const { error } = await supabase.from('events').insert([payload]);
+    if (error) throw error;
+  }
+}
+
+export async function deleteEvent(id) {
+  const { error } = await supabase.from('events').delete().eq('id', id);
+  if (error) throw error;
+}
 export class CalendarModule {
   constructor(app) {
     this.app = app;
