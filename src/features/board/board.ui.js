@@ -1,47 +1,111 @@
-// features/board/board.ui.js
+import Chart from 'chart.js/auto';
+import {
+  getMemberStats,
+  getEventStats,
+  getNextEvent,
+  getUpcomingEvents,
+  getFinanceStats
+} from './board.api.js';
 
-import { getBoardStats, getUpcomingEvents, exportMembersCSV } from './board.api.js';
+let chart = null;
 
-export async function renderBoardOverview() {
-  const stats = await getBoardStats();
+// ===============================
+// MAIN RENDER
+// ===============================
+export async function renderBoardDashboard() {
+  await renderStats();
+  await renderUpcoming();
+  await renderFinanceChart();
+}
 
-  document.getElementById('statTotalMembers').textContent = stats.totalMembers;
-  document.getElementById('statActiveMembers').textContent = stats.activeMembers;
-  document.getElementById('statAvgAttendance').textContent = stats.avgAttendance + '%';
-  document.getElementById('statNextEvent').textContent = stats.nextEvent || '--';
+// ===============================
+// STATS
+// ===============================
+async function renderStats() {
+  const memberStats = await getMemberStats();
+  const eventStats = await getEventStats();
+  const nextEvent = await getNextEvent();
 
+  setText('statTotalMembers', memberStats.totalMembers);
+  setText('statActiveMembers', memberStats.activeMembers);
+  setText('statUpcomingEvents', eventStats.upcomingEvents);
+  setText(
+    'statNextEvent',
+    nextEvent
+      ? `${nextEvent.title} (${formatDate(nextEvent.starttime)})`
+      : '--'
+  );
+}
+
+// ===============================
+// UPCOMING EVENTS
+// ===============================
+async function renderUpcoming() {
   const events = await getUpcomingEvents(5);
   const container = document.getElementById('boardUpcomingEvents');
 
   if (!container) return;
 
-  container.innerHTML = events.map(e => `
-    <div class="event-list-item">
-      <div>
-        <strong>${e.title}</strong><br>
-        <small>${new Date(e.starttime).toLocaleDateString('de-DE')}</small>
-      </div>
-      <span class="status-badge">${e.type}</span>
-    </div>
-  `).join('');
+  container.innerHTML =
+    events.length === 0
+      ? '<p>Keine anstehenden Events.</p>'
+      : events.map(e => `
+        <div class="event-list-item">
+          <div>
+            <strong>${escapeHtml(e.title)}</strong><br>
+            <small>${formatDate(e.starttime)} – ${e.location || '—'}</small>
+          </div>
+          <span class="status-badge">${e.type}</span>
+        </div>
+      `).join('');
 }
 
-export function exportMembers() {
-  exportMembersCSV().then(members => {
-    if (!members.length) {
-      alert('Keine Mitglieder vorhanden');
-      return;
+// ===============================
+// FINANCE CHART
+// ===============================
+async function renderFinanceChart() {
+  const { paid, pending } = await getFinanceStats();
+  const canvas = document.getElementById('financeChart');
+
+  if (!canvas) return;
+
+  if (chart) chart.destroy();
+
+  chart = new Chart(canvas.getContext('2d'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Bezahlt', 'Ausstehend'],
+      datasets: [
+        {
+          data: [paid, pending],
+          backgroundColor: ['#0a6f39', '#eab308']
+        }
+      ]
+    },
+    options: {
+      plugins: {
+        legend: { position: 'bottom' }
+      }
     }
-
-    const csv = [
-      ['Name', 'E-Mail', 'Stimmlage', 'Telefon'],
-      ...members.map(m => [m.name, m.email, m.voice, m.phone])
-    ].map(r => r.join(',')).join('\n');
-
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = 'mitglieder.csv';
-    link.click();
   });
+}
+
+// ===============================
+// HELPERS
+// ===============================
+function setText(id, value) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+}
+
+function formatDate(date) {
+  return new Date(date).toLocaleDateString('de-DE');
+}
+
+function escapeHtml(str) {
+  return str?.replace(/[&<>]/g, m => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;'
+  }[m])) || '';
 }
