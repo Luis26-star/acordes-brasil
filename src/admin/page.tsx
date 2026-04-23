@@ -1,35 +1,37 @@
 'use client';
 
+import { AuthGuard } from '@/components/auth/auth-guard';
 import { MembersTable } from '@/features/members/members-table';
 import { EventsTable } from '@/features/events/events-table';
 import { FinanceWidget } from '@/features/finances/finance-widget';
 
 export default function AdminPage() {
   return (
-    <div className="p-6 space-y-8 max-w-6xl mx-auto">
+    <AuthGuard requireRole="board">
+      {/* 🔥 board + admin erlaubt */}
 
-      <h1 className="text-3xl font-bold">
-        🎵 Acordes Brasil Admin
-      </h1>
+      <div className="p-6 space-y-8 max-w-6xl mx-auto">
 
-      {/* MEMBERS */}
-      <section>
-        <h2 className="text-xl font-semibold mb-3">Mitglieder</h2>
-        <MembersTable />
-      </section>
+        <h1 className="text-3xl font-bold">
+          🎵 Admin Dashboard
+        </h1>
 
-      {/* EVENTS */}
-      <section>
-        <h2 className="text-xl font-semibold mb-3">Events</h2>
-        <EventsTable />
-      </section>
+        <section>
+          <h2 className="text-xl font-semibold mb-3">Mitglieder</h2>
+          <MembersTable />
+        </section>
 
-      {/* FINANCES */}
-      <section>
-        <h2 className="text-xl font-semibold mb-3">Finanzen</h2>
-        <FinanceWidget />
-      </section>
+        <section>
+          <h2 className="text-xl font-semibold mb-3">Events</h2>
+          <EventsTable />
+        </section>
 
-    </div>
+        <section>
+          <h2 className="text-xl font-semibold mb-3">Finanzen</h2>
+          <FinanceWidget />
+        </section>
+
+      </div>
+    </AuthGuard>
   );
 }
