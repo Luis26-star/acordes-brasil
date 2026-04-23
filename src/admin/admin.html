@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Admin · Acordes Brasil</title>
+
+  <link rel="stylesheet" href="/src/css/admin.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+  <div class="admin-container">
+
+    <!-- HEADER -->
+    <header class="admin-header">
+      <h1>
+        <i class="fas fa-crown"></i>
+        <span data-brand-short>Acordes Brasil</span> · Verwaltung
+      </h1>
+
+      <button id="logoutBtn" class="btn btn-outline">
+        <i class="fas fa-sign-out-alt"></i> Abmelden
+      </button>
+    </header>
+
+    <!-- TABS -->
+    <div class="admin-tabs">
+      <button class="tab-btn active" data-tab="members">
+        <i class="fas fa-users"></i> Mitglieder
+      </button>
+
+      <button class="tab-btn" data-tab="events">
+        <i class="fas fa-calendar-alt"></i> Events
+      </button>
+
+      <button class="tab-btn" data-tab="finances">
+        <i class="fas fa-euro-sign"></i> Finanzen
+      </button>
+
+      <button class="tab-btn" data-tab="analytics">
+        <i class="fas fa-chart-bar"></i> Analytics
+      </button>
+    </div>
+
+    <!-- ================= MEMBERS ================= -->
+    <div id="membersPanel" class="panel active">
+      <div class="panel-header">
+        <h2><i class="fas fa-user-plus"></i> Mitglieder</h2>
+
+        <div class="actions">
+          <input type="file" id="csvImport" accept=".csv">
+          <button id="importBtn" class="btn btn-outline">CSV Import</button>
+        </div>
+      </div>
+
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>E-Mail</th>
+            <th>Stimme</th>
+            <th>Rolle</th>
+            <th>Status</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="membersTableBody">
+          <tr><td colspan="6">Laden...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ================= EVENTS ================= -->
+    <div id="eventsPanel" class="panel">
+      <div class="panel-header">
+        <h2><i class="fas fa-music"></i> Events</h2>
+
+        <button id="openEventModalBtn" class="btn btn-primary">
+          <i class="fas fa-plus"></i> Event
+        </button>
+      </div>
+
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Titel</th>
+            <th>Typ</th>
+            <th>Start</th>
+            <th>Ende</th>
+            <th>Ort</th>
+            <th>Teilnahme</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="eventsTableBody">
+          <tr><td colspan="7">Laden...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ================= FINANCES ================= -->
+    <div id="financesPanel" class="panel">
+      <h2><i class="fas fa-chart-line"></i> Finanzen</h2>
+
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>Mitglied</th>
+            <th>Betrag</th>
+            <th>Status</th>
+            <th>Fällig</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="feePaymentsList">
+          <tr><td colspan="5">Laden...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- ================= ANALYTICS ================= -->
+    <div id="analyticsPanel" class="panel">
+      <h2>Analytics</h2>
+
+      <canvas id="voiceChart" height="200"></canvas>
+      <canvas id="attendanceChart" height="200"></canvas>
+    </div>
+
+    <!-- ================= PUSH ================= -->
+    <div style="margin-top:20px">
+      <button id="pushBtn" class="btn btn-outline">
+        Push aktivieren
+      </button>
+    </div>
+
+  </div>
+
+  <!-- SCRIPT -->
+  <script type="module" src="/src/js/admin.js"></script>
+
+</body>
+</html>
