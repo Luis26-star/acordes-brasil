@@ -1,7 +1,7 @@
 'use client';
 
 import { AuthGuard } from '@/components/auth/auth-guard';
-import { LogoutButton } from '@/components/ui/logout-button';
+import { AdminLayout } from '@/components/layout/admin-layout';
 
 import { MembersTable } from '@/features/members/members-table';
 import { EventsTable } from '@/features/events/events-table';
