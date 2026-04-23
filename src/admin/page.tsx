@@ -4,6 +4,7 @@ import { AuthGuard } from '@/components/auth/auth-guard';
 import { MembersTable } from '@/features/members/members-table';
 import { EventsTable } from '@/features/events/events-table';
 import { FinanceWidget } from '@/features/finances/finance-widget';
+import { LogoutButton } from '@/components/ui/logout-button';
 
 export default function AdminPage() {
   return (
