@@ -2,6 +2,9 @@
 
 import { useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useRealtimeEvents } from '@/hooks/use-realtime-events';
+
+useRealtimeEvents(setEvents);
 
 export function useRealtimeEvents(setEvents: any) {
   useEffect(() => {
