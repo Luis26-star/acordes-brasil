@@ -1,1 +1,36 @@
+'use client';
 
+import { useEffect, useState } from 'react';
+import { fetchEvents } from './events.api';
+
+export function EventsTable() {
+  const [events, setEvents] = useState([]);
+
+  useEffect(() => {
+    fetchEvents().then(setEvents);
+  }, []);
+
+  return (
+    <table className="w-full border rounded-lg">
+      <thead className="bg-gray-100 text-left text-sm">
+        <tr>
+          <th className="p-2">Titel</th>
+          <th className="p-2">Start</th>
+          <th className="p-2">Ort</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {events.map((e: any) => (
+          <tr key={e.id} className="border-t">
+            <td className="p-2">{e.title}</td>
+            <td className="p-2">
+              {new Date(e.starttime).toLocaleString()}
+            </td>
+            <td className="p-2">{e.location}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
