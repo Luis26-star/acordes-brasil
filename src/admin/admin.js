@@ -1,4 +1,3 @@
-// ========== ADMIN APP ==========
 import { supabase } from '../lib/supabase.js';
 import { applyBranding } from './modules/apply-branding.js';
 
@@ -10,26 +9,33 @@ import { renderBoardDashboard } from '../features/board/board.ui.js';
 class AdminApp {
   constructor() {
     this.user = null;
+    this.role = null;
 
-    // Feature Modules
     this.members = new MembersUI();
     this.events = new EventsUI();
+
+    this.channels = [];
   }
 
-  // ================= INIT =================
   async init() {
     applyBranding();
 
     await this.checkAuth();
 
     this.bindUI();
+    this.applyRoleUI();
 
-    // Initial Load
-    await this.members.load();
-    await this.events.load();
+    await this.initialLoad();
+    this.initRealtime();
   }
 
-  // ================= AUTH =================
+  async initialLoad() {
+    await Promise.all([
+      this.members.load(),
+      this.events.load()
+    ]);
+  }
+
   async checkAuth() {
     try {
       const { data, error } = await supabase.auth.getUser();
@@ -41,17 +47,21 @@ class AdminApp {
 
       this.user = data.user;
 
-      // Role Check (WICHTIG!)
       const { data: profile, error: profileError } = await supabase
         .from('profiles')
         .select('role')
         .eq('id', this.user.id)
         .single();
 
-      if (profileError || !['admin', 'board'].includes(profile?.role)) {
-        alert('Keine Berechtigung für Adminbereich');
+      if (profileError || !profile) throw new Error('Profile missing');
+
+      if (!['admin', 'board'].includes(profile.role)) {
+        alert('Keine Berechtigung');
         window.location.href = '/';
+        return;
       }
+
+      this.role = profile.role;
 
     } catch (err) {
       console.error('[Auth]', err);
@@ -59,58 +69,58 @@ class AdminApp {
     }
   }
 
-  // ================= UI =================
+  applyRoleUI() {
+    if (this.role === 'board') {
+      document.querySelectorAll('[data-admin-only]')
+        .forEach(el => el.remove());
+    }
+  }
+
   bindUI() {
-    // Logout
     document.getElementById('logoutBtn')?.addEventListener('click', async () => {
       await supabase.auth.signOut();
       window.location.href = '/';
     });
 
-    // Tabs
     document.querySelectorAll('.tab-btn').forEach(btn => {
       btn.addEventListener('click', () => this.switchTab(btn));
     });
 
-    // Optional: Default Tab sichern
-    const activeBtn = document.querySelector('.tab-btn.active');
-    if (activeBtn) this.switchTab(activeBtn);
+    const active = document.querySelector('.tab-btn.active');
+    if (active) this.switchTab(active);
   }
 
   switchTab(btn) {
     const tab = btn.dataset.tab;
 
-    // Reset UI
     document.querySelectorAll('.tab-btn, .panel')
       .forEach(el => el.classList.remove('active'));
 
     btn.classList.add('active');
     document.getElementById(`${tab}Panel`)?.classList.add('active');
 
-    // Lazy Loading je Tab
     switch (tab) {
-      case 'members':
-        this.members.load();
-        break;
-
-      case 'events':
-        this.events.load();
-        break;
-
-      case 'finances':
-        renderFinanceChart();
-        break;
-
-      case 'board':
-        renderBoardDashboard();
-        break;
+      case 'members': this.members.load(); break;
+      case 'events': this.events.load(); break;
+      case 'finances': renderFinanceChart(); break;
+      case 'board': renderBoardDashboard(); break;
     }
+  }
+
+  initRealtime() {
+    const profiles = supabase.channel('profiles')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'profiles' },
+        () => this.members.load()
+      ).subscribe();
+
+    const events = supabase.channel('events')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'events' },
+        () => this.events.load()
+      ).subscribe();
+
+    this.channels.push(profiles, events);
   }
 }
 
-// ================= START =================
 const app = new AdminApp();
-
-document.addEventListener('DOMContentLoaded', () => {
-  app.init();
-});
+document.addEventListener('DOMContentLoaded', () => app.init());
