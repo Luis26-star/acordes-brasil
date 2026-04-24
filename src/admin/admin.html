@@ -226,6 +226,45 @@
   </div>
 
   <!-- APP SCRIPT -->
-  <script type="module" src="/src/js/admin.js"></script>
+  <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/@supabase/supabase-js)"></script>
+
+<script>
+  const supabase = window.supabase.createClient(
+    "DEINE_URL",
+    "DEIN_ANON_KEY"
+  );
+
+  // Beispiel: Mitglieder laden
+  async function loadMembers() {
+    const { data, error } = await supabase
+      .from("members")
+      .select("*");
+
+    const body = document.getElementById("membersTableBody");
+
+    if (error) {
+      body.innerHTML = '<tr><td colspan="6">Fehler beim Laden</td></tr>';
+      return;
+    }
+
+    body.innerHTML = "";
+
+    data.forEach(m => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${m.name}</td>
+        <td>${m.email}</td>
+        <td>${m.voice}</td>
+        <td>${m.role}</td>
+        <td>${m.status}</td>
+        <td>–</td>
+      `;
+      body.appendChild(row);
+    });
+  }
+
+  document.addEventListener("DOMContentLoaded", loadMembers);
+</script>
+
 </body>
 </html>
