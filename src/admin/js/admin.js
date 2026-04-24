@@ -530,4 +530,6 @@ document.addEventListener("DOMContentLoaded", () => {
   loadMembers();
   loadEvents();
   loadFinances();
+  loadAttendanceEvents();
+
 });
