@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acordes Brasil – Login</title>
+
+  <link rel="stylesheet" href="./css/admin.css" />
+  <link rel="stylesheet"
+    href="[cdnjs.cloudflare.com](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css)" />
+</head>
+
+<body class="login-page">
+
+  <div class="login-container">
+
+    <h1><i class="fas fa-crown"></i> Acordes Brasil</h1>
+    <p class="login-subtitle">Vorstands- & Admin-Bereich</p>
+
+    <form id="loginForm">
+      <label>
+        E-Mail
+        <input type="email" id="loginEmail" required />
+      </label>
+
+      <label>
+        Passwort
+        <input type="password" id="loginPassword" required />
+      </label>
+
+      <button class="btn btn-primary" type="submit">Anmelden</button>
+
+      <p id="loginError" class="login-error"></p>
+    </form>
+  </div>
+
+  <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/@supabase/supabase-js)"></script>
+  <script src="./login.js"></script>
+</body>
+</html>
