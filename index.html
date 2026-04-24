@@ -1,51 +1,33 @@
+ 
+<script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/@supabase/supabase-js)"></script>
 
-<script type="module">
-import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
-
-const supabase = createClient(
- 'https://ifrpcqqkyoidyfhjglhk.supabase.co'
+<script>
+const supabase = window.supabase.createClient(
+  'https://ifrpcqqkyoidyfhjglhk.supabase.co'
   'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmcnBjcXFreW9pZHlmaGpnbGhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzMzI5MzYsImV4cCI6MjA5MTkwODkzNn0.x0D5118W2nJh_vfSHgfdf3wjL8Pr4L2aNmV5QrRMRms'
-  
-)
+ 
+);
 
 async function loadMembers() {
-  const { data, error } = await supabase.from('members').select('*')
+  const { data, error } = await supabase
+    .from('members')
+    .select('*');
 
   if (error) {
-    console.error(error)
-    return
+    console.error(error);
+    return;
   }
 
-  console.log('Members:', data)
+  const list = document.getElementById('members');
+  list.innerHTML = '';
 
-  const list = document.getElementById('members')
-
-  data.forEach(m => {
-    const li = document.createElement('li')
-    li.textContent = m.name + ' (' + m.voice_type + ')'
-    list.appendChild(li)
-  })
+  data.forEach(member => {
+    const li = document.createElement('li');
+    li.textContent = member.name;   // ggf. anpassen an deine Spalte
+    list.appendChild(li);
+  });
 }
 
-async function loadEvents() {
-  const { data, error } = await supabase.from('events').select('*')
-
-  if (error) {
-    console.error(error)
-    return
-  }
-
-  console.log('Events:', data)
-
-  const list = document.getElementById('events')
-
-  data.forEach(e => {
-    const li = document.createElement('li')
-    li.textContent = e.title
-    list.appendChild(li)
-  })
-}
-
-loadMembers()
-loadEvents()
+// Beim Laden der Seite ausführen
+document.addEventListener('DOMContentLoaded', loadMembers);
 </script>
