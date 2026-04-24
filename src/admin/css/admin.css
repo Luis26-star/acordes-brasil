@@ -253,4 +253,82 @@ body.login-page {
   font-size: 14px;
   text-align: center;
 }
+/* ===================================================
+   PARTICIPAÇÃO
+=================================================== */
+.attendance-selectors {
+  margin-bottom: 20px;
+}
+
+.attendance-member-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.attendance-member {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background: white;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.attendance-member .naipe-label {
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 10px;
+  color: white;
+}
+
+.naipe-soprano   { background: #e91e63; }
+.naipe-contralto { background: #9c27b0; }
+.naipe-tenor     { background: #3f51b5; }
+.naipe-baixo     { background: #009688; }
+
+.attendance-buttons button {
+  margin-left: 8px;
+}
+
+.btn-yes {
+  background: #4caf50;
+  color: white;
+}
+
+.btn-no {
+  background: #f44336;
+  color: white;
+}
+
+/* Diretoria: Matrix */
+.attendance-matrix-wrapper {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+.attendance-matrix {
+  display: grid;
+  gap: 4px;
+}
+
+.matrix-header {
+  font-weight: bold;
+  background: #f0f0f0;
+  padding: 6px;
+  border-radius: 4px;
+}
+
+.matrix-cell {
+  padding: 6px;
+  text-align: center;
+  border-radius: 4px;
+}
+
+.matrix-yes { background: #c8e6c9; }
+.matrix-no  { background: #ffcdd2; }
+
+}
+
 
