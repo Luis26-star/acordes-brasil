@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Choir App</title>
+</head>
+<body>
+
+<h1>Mitglieder</h1>
+<ul id="members"></ul>
+
+<h1>Events</h1>
+<ul id="events"></ul>
+
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm'
+
+  const supabase = createClient(
+    'https://YOUR_PROJECT.supabase.co',
+    'YOUR_ANON_KEY'
+  )
+
+  async function loadMembers() {
+    const { data } = await supabase.from('members').select('*')
+    const list = document.getElementById('members')
+
+    data.forEach(m => {
+      const li = document.createElement('li')
+      li.textContent = m.name + ' (' + m.voice_type + ')'
+      list.appendChild(li)
+    })
+  }
+
+  async function loadEvents() {
+    const { data } = await supabase.from('events').select('*')
+    const list = document.getElementById('events')
+
+    data.forEach(e => {
+      const li = document.createElement('li')
+      li.textContent = e.title
+      list.appendChild(li)
+    })
+  }
+
+  loadMembers()
+  loadEvents()
+</script>
+
+</body>
+</html>
