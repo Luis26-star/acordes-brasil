@@ -1,3 +1,50 @@
+/* ============= SESSION CHECK ============= */
+async function protectPage() {
+  const { data: { session } } = await supabase.auth.getSession();
+
+  if (!session) {
+    window.location.href = "./login.html";
+    return;
+  }
+
+  // Rolle aus members lesen
+  const email = session.user.email;
+
+  const { data: member } = await supabase
+    .from("members")
+    .select("role")
+    .eq("email", email)
+    .single();
+
+  if (!member) {
+    alert("Kein Konto gefunden.");
+    await supabase.auth.signOut();
+    window.location.href = "./login.html";
+    return;
+  }
+
+  // Rolle anwenden
+  applyRolePermissions(member.role);
+}
+
+function applyRolePermissions(role) {
+  // Admin → alles
+  if (role === "admin") return;
+
+  // Vorstand → Members, Events, Finances
+  if (role === "board") return;
+
+  // Mitglieder → nur Teilnahme (gleich folgt Event-System)
+  if (role === "member") {
+    document.querySelector("[data-tab='finances']").style.display = "none";
+    document.querySelector("[data-tab='members']").style.display = "none";
+  }
+}
+
+/* Starten */
+protectPage();
+
+
 /* ----------------------------------------------------
    Supabase Client
 ---------------------------------------------------- */
