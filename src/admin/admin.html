@@ -1,50 +1,52 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <title data-brand-short>Acordes Brasil</title>
+  <title>Acordes Brasil – Admin</title>
 
   <!-- Styles -->
-  <link rel="stylesheet" href="/src/css/admin.css">
+  <link rel="stylesheet" href="./css/admin.css" />
 
-  <!-- Icons (später lokal hosten für DSGVO) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Icons -->
+  <link
+    rel="stylesheet"
+    href="[cdnjs.cloudflare.com](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css)"
+    integrity="sha512-T5xgkYkfcJxk..."
+    crossorigin="anonymous"
+  />
 </head>
 
 <body>
+
   <div class="admin-container">
 
     <!-- HEADER -->
     <header class="admin-header">
       <h1>
-        <i class="fas fa-crown" aria-hidden="true"></i>
-        <span data-brand-short>Acordes Brasil</span>
+        <i class="fas fa-crown"></i>
+        <span>Acordes Brasil</span>
         <small>· Verwaltung</small>
       </h1>
 
       <button id="logoutBtn" class="btn btn-outline">
-        <i class="fas fa-sign-out-alt"></i>
-        <span>Abmelden</span>
+        <i class="fas fa-sign-out-alt"></i> Abmelden
       </button>
     </header>
 
-    <!-- NAV -->
-    <nav class="admin-tabs" role="tablist">
-      <button class="tab-btn active" data-tab="members" role="tab">Mitglieder</button>
-      <button class="tab-btn" data-tab="events" role="tab">Events</button>
-      <button class="tab-btn" data-tab="finances" role="tab">Finanzen</button>
+    <!-- NAVIGATION -->
+    <nav class="admin-tabs">
+      <button class="tab-btn active" data-tab="members">Mitglieder</button>
+      <button class="tab-btn" data-tab="events">Events</button>
+      <button class="tab-btn" data-tab="finances">Finanzen</button>
     </nav>
 
-    <!-- ===================== -->
-    <!-- MEMBERS -->
-    <!-- ===================== -->
-    <section id="membersPanel" class="panel active" role="tabpanel">
+    <!-- MEMBERS PANEL -->
+    <section id="membersPanel" class="panel active">
 
       <div class="panel-header">
-        <h2><i class="fas fa-users"></i> Mitgliederverwaltung</h2>
-
+        <h2><i class="fas fa-users"></i> Mitglieder</h2>
         <button id="openMemberModalBtn" class="btn btn-primary">
           <i class="fas fa-plus"></i> Mitglied anlegen
         </button>
@@ -71,14 +73,11 @@
 
     </section>
 
-    <!-- ===================== -->
-    <!-- EVENTS -->
-    <!-- ===================== -->
-    <section id="eventsPanel" class="panel" role="tabpanel">
+    <!-- EVENTS PANEL -->
+    <section id="eventsPanel" class="panel">
 
       <div class="panel-header">
-        <h2><i class="fas fa-calendar-alt"></i> Events & Proben</h2>
-
+        <h2><i class="fas fa-calendar"></i> Events</h2>
         <button id="openEventModalBtn" class="btn btn-primary">
           <i class="fas fa-plus"></i> Event anlegen
         </button>
@@ -105,48 +104,59 @@
 
     </section>
 
-    <!-- ===================== -->
-    <!-- FINANCES -->
-    <!-- ===================== -->
-    <section id="financesPanel" class="panel" role="tabpanel">
+    <!-- FINANCES PANEL -->
+    <section id="financesPanel" class="panel">
 
-      <h2><i class="fas fa-chart-line"></i> Finanzübersicht</h2>
+      <div class="panel-header">
+        <h2><i class="fas fa-chart-line"></i> Finanzen</h2>
+        <button id="openFinanceModalBtn" class="btn btn-primary">
+          <i class="fas fa-plus"></i> Eintrag anlegen
+        </button>
+      </div>
 
+      <div class="table-wrapper">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>Datum</th>
+              <th>Person</th>
+              <th>Betrag</th>
+              <th>Typ</th>
+              <th>Kommentar</th>
+              <th>SEPA</th>
+              <th>Bezahlt</th>
+              <th>Aktionen</th>
+            </tr>
+          </thead>
+
+          <tbody id="financeTableBody">
+            <tr><td colspan="8">Laden...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3>Monatsübersicht</h3>
       <canvas id="financeChart"></canvas>
-
-      <button id="exportCsvBtn" class="btn btn-primary">
-        <i class="fas fa-download"></i> CSV-Export
-      </button>
 
     </section>
 
   </div>
 
-  <!-- ===================== -->
-  <!-- MODAL: MEMBER -->
-  <!-- ===================== -->
+  <!-- MEMBER MODAL -->
   <div id="memberModal" class="modal" aria-hidden="true">
-    <div class="modal-content" role="dialog">
-
+    <div class="modal-content">
       <h3>Mitglied</h3>
 
-      <label>
-        Name
-        <input type="text" id="memberName" required>
-      </label>
-
-      <label>
-        E-Mail
-        <input type="email" id="memberEmail" required>
-      </label>
+      <label>Name <input type="text" id="memberName" /></label>
+      <label>E-Mail <input type="email" id="memberEmail" /></label>
 
       <label>
         Stimme
         <select id="memberVoice">
           <option value="soprano">Sopran</option>
-          <option value="contralto">Alt</option>
+          <option value="alto">Alt</option>
           <option value="tenor">Tenor</option>
-          <option value="baixo">Bass</option>
+          <option value="bass">Bass</option>
         </select>
       </label>
 
@@ -167,26 +177,27 @@
         </select>
       </label>
 
+      <label>
+        SEPA Zustimmung?
+        <select id="memberSepa">
+          <option value="true">Ja</option>
+          <option value="false">Nein</option>
+        </select>
+      </label>
+
       <div class="modal-actions">
         <button id="saveMemberBtn" class="btn btn-primary">Speichern</button>
         <button data-close="memberModal" class="btn btn-secondary">Abbrechen</button>
       </div>
-
     </div>
   </div>
 
-  <!-- ===================== -->
-  <!-- MODAL: EVENT -->
-  <!-- ===================== -->
+  <!-- EVENT MODAL -->
   <div id="eventModal" class="modal" aria-hidden="true">
-    <div class="modal-content" role="dialog">
+    <div class="modal-content">
+      <h3>Event</h3>
 
-      <h3>Event / Probe</h3>
-
-      <label>
-        Titel
-        <input type="text" id="eventTitle" required>
-      </label>
+      <label>Titel <input type="text" id="eventTitle" /></label>
 
       <label>
         Typ
@@ -197,74 +208,49 @@
         </select>
       </label>
 
-      <label>
-        Start
-        <input type="datetime-local" id="eventStart" required>
-      </label>
-
-      <label>
-        Ende
-        <input type="datetime-local" id="eventEnd" required>
-      </label>
-
-      <label>
-        Ort
-        <input type="text" id="eventLocation">
-      </label>
-
-      <label>
-        Beschreibung
-        <textarea id="eventDescription"></textarea>
-      </label>
+      <label>Start <input type="datetime-local" id="eventStart" /></label>
+      <label>Ende <input type="datetime-local" id="eventEnd" /></label>
+      <label>Ort <input type="text" id="eventLocation" /></label>
+      <label>Beschreibung <textarea id="eventDescription"></textarea></label>
 
       <div class="modal-actions">
         <button id="saveEventBtn" class="btn btn-primary">Speichern</button>
         <button data-close="eventModal" class="btn btn-secondary">Abbrechen</button>
       </div>
-
     </div>
   </div>
 
-  <!-- APP SCRIPT -->
+  <!-- FINANCE MODAL -->
+  <div id="financeModal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <h3>Finanzeintrag</h3>
+
+      <label>Datum <input type="date" id="financeDate" /></label>
+      <label>Person <input type="text" id="financePerson" /></label>
+      <label>Betrag (€) <input type="number" id="financeAmount" step="0.01" /></label>
+
+      <label>
+        Typ
+        <select id="financeType">
+          <option value="income">Einnahme</option>
+          <option value="expense">Ausgabe</option>
+          <option value="fee">Mitgliedsbeitrag</option>
+        </select>
+      </label>
+
+      <label>Kommentar <textarea id="financeComment"></textarea></label>
+
+      <div class="modal-actions">
+        <button id="saveFinanceBtn" class="btn btn-primary">Speichern</button>
+        <button data-close="financeModal" class="btn btn-secondary">Abbrechen</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Script -->
+  <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/chart.js)"></script>
   <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/@supabase/supabase-js)"></script>
-
-<script>
-  const supabase = window.supabase.createClient(
-    "DEINE_URL",
-    "DEIN_ANON_KEY"
-  );
-
-  // Beispiel: Mitglieder laden
-  async function loadMembers() {
-    const { data, error } = await supabase
-      .from("members")
-      .select("*");
-
-    const body = document.getElementById("membersTableBody");
-
-    if (error) {
-      body.innerHTML = '<tr><td colspan="6">Fehler beim Laden</td></tr>';
-      return;
-    }
-
-    body.innerHTML = "";
-
-    data.forEach(m => {
-      const row = document.createElement("tr");
-      row.innerHTML = `
-        <td>${m.name}</td>
-        <td>${m.email}</td>
-        <td>${m.voice}</td>
-        <td>${m.role}</td>
-        <td>${m.status}</td>
-        <td>–</td>
-      `;
-      body.appendChild(row);
-    });
-  }
-
-  document.addEventListener("DOMContentLoaded", loadMembers);
-</script>
+  <script src="./js/admin.js"></script>
 
 </body>
 </html>
