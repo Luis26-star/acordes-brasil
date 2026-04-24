@@ -1,0 +1,218 @@
+/* ===================================================
+   RESET & BASE
+=================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  font-family: system-ui, sans-serif;
+  background: #f6f7f8;
+  color: #222;
+  height: 100%;
+}
+
+.admin-container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* ===================================================
+   HEADER
+=================================================== */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.admin-header h1 {
+  font-size: 26px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-header small {
+  font-size: 14px;
+  color: #777;
+}
+
+.btn {
+  padding: 8px 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.btn-primary {
+  background: #3498db;
+  color: white;
+}
+
+.btn-outline {
+  background: white;
+  border: 2px solid #3498db;
+  color: #3498db;
+}
+
+.btn-small {
+  padding: 4px 8px;
+  font-size: 12px;
+}
+
+/* ===================================================
+   TABS
+=================================================== */
+.admin-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.tab-btn {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  background: #ddd;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  background: #3498db;
+  color: white;
+}
+
+/* ===================================================
+   PANELS
+=================================================== */
+.panel {
+  display: none;
+}
+.panel.active {
+  display: block;
+}
+
+/* ===================================================
+   TABLES
+=================================================== */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.admin-table th,
+.admin-table td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+}
+
+.admin-table th {
+  background: #f0f0f0;
+  text-align: left;
+}
+
+.admin-table tr:hover {
+  background: #fafafa;
+}
+
+/* ===================================================
+   MODALS
+=================================================== */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  visibility: hidden;
+  opacity: 0;
+  transition: 0.25s ease;
+}
+
+.modal[aria-hidden="false"] {
+  visibility: visible;
+  opacity: 1;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 10px;
+}
+
+.modal-content label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.modal-content input,
+.modal-content select,
+.modal-content textarea {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+/* ===================================================
+   DARK MODE
+=================================================== */
+body.dark {
+  background: #1a1a1a;
+  color: #eee;
+}
+
+body.dark .admin-table th {
+  background: #333;
+}
+
+body.dark .admin-table td {
+  border-color: #444;
+}
+
+body.dark .modal-content {
+  background: #2a2a2a;
+}
+
+body.dark .tab-btn {
+  background: #444;
+  color: #ddd;
+}
+body.dark .tab-btn.active {
+  background: #3498db;
+  color: white;
+}
+
+/* ===================================================
+   MOBILE
+=================================================== */
+@media (max-width: 700px) {
+  .admin-header h1 {
+    font-size: 18px;
+  }
+
+  .tab-btn {
+    flex: 1;
+    font-size: 12px;
+  }
+
+  .modal-content {
+    max-width: 100%;
+  }
+}
