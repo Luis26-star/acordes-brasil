@@ -248,9 +248,51 @@
   </div>
 
   <!-- Script -->
-  <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/chart.js)"></script>
-  <script src="[cdn.jsdelivr.net](https://cdn.jsdelivr.net/npm/@supabase/supabase-js)"></script>
-  <script src="./js/admin.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+
+<script>
+const supabase = window.supabase.createClient(
+  'DEINE_URL',
+  'DEIN_ANON_KEY'
+);
+
+async function loadMembers() {
+  const { data, error } = await supabase.from('members').select('*');
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  const list = document.getElementById('members');
+
+  data.forEach(m => {
+    const li = document.createElement('li');
+    li.textContent = m.name + ' (' + m.voice_type + ')';
+    list.appendChild(li);
+  });
+}
+
+async function loadEvents() {
+  const { data, error } = await supabase.from('events').select('*');
+
+  if (error) {
+    console.error(error);
+    return;
+  }
+
+  const list = document.getElementById('events');
+
+  data.forEach(e => {
+    const li = document.createElement('li');
+    li.textContent = e.title;
+    list.appendChild(li);
+  });
+}
+
+loadMembers();
+loadEvents();
+</script>
 
 </body>
 </html>
