@@ -338,6 +338,190 @@ document.getElementById("logoutBtn").addEventListener("click", async () => {
   await supabase.auth.signOut();
   window.location.href = "/"; 
 });
+/* ====================================================
+   PARTICIPAÇÃO
+==================================================== */
+
+/* Stimmen sortieren (Naipe) */
+const NAIPE_ORDER = ["Soprano", "Contralto", "Tenor", "Baixo"];
+
+/* -------------------------------
+   Events laden
+------------------------------- */
+async function loadAttendanceEvents() {
+  const sel = document.getElementById("attendanceEventSelect");
+  sel.innerHTML = "<option>Wird geladen...</option>";
+
+  const { data: events } = await supabase
+    .from("events")
+    .select("*")
+    .order("start", { ascending: true });
+
+  sel.innerHTML = "";
+
+  events.forEach(ev => {
+    const opt = document.createElement("option");
+    opt.value = ev.id;
+    opt.textContent = `${formatDateDE(ev.start)} – ${ev.title}`;
+    sel.appendChild(opt);
+  });
+
+  if (events.length > 0) {
+    loadAttendanceMemberList(events[0].id);
+    loadAttendanceMatrix(events[0].id);
+  }
+
+  sel.addEventListener("change", () => {
+    loadAttendanceMemberList(sel.value);
+    loadAttendanceMatrix(sel.value);
+  });
+}
+
+/* -------------------------------
+   Mitgliederliste laden
+------------------------------- */
+async function loadAttendanceMemberList(event_id) {
+  const box = document.getElementById("attendanceMemberList");
+  box.innerHTML = "Lade Mitglieder...";
+
+  const { data: members } = await supabase
+    .from("members")
+    .select("*");
+
+  // Nach naipe sortieren
+  members.sort((a, b) => {
+    return NAIPE_ORDER.indexOf(a.naipe) - NAIPE_ORDER.indexOf(b.naipe);
+  });
+
+  // Bestehende Attendance laden
+  const { data: att } = await supabase
+    .from("attendance")
+    .select("*")
+    .eq("event_id", event_id);
+
+  box.innerHTML = "";
+
+  members.forEach(m => {
+    const record = att.find(a => a.member_id === m.id);
+    const status = record ? record.status : null;
+
+    const div = document.createElement("div");
+    div.className = "attendance-member";
+
+    const naipeClass = {
+      Soprano: "naipe-soprano",
+      Contralto: "naipe-contralto",
+      Tenor: "naipe-tenor",
+      Baixo: "naipe-baixo"
+    }[m.naipe];
+
+    div.innerHTML = `
+      <div>
+        <strong>${m.name}</strong>
+        <span class="naipe-label ${naipeClass}">${m.naipe}</span>
+      </div>
+
+      <div class="attendance-buttons">
+        <button class="btn btn-small btn-yes">Presente</button>
+        <button class="btn btn-small btn-no">Ausente</button>
+      </div>
+    `;
+
+    // Button Logik
+    const yesBtn = div.querySelector(".btn-yes");
+    const noBtn = div.querySelector(".btn-no");
+
+    if (status === "yes") yesBtn.style.opacity = "1";
+    if (status === "no") noBtn.style.opacity = "1";
+
+    yesBtn.addEventListener("click", () =>
+      saveAttendance(event_id, m.id, "yes")
+    );
+    noBtn.addEventListener("click", () =>
+      saveAttendance(event_id, m.id, "no")
+    );
+
+    box.appendChild(div);
+  });
+}
+
+/* -------------------------------
+   Attendance speichern
+------------------------------- */
+async function saveAttendance(event_id, member_id, status) {
+  // löschen & neu eintragen (upsert)
+  await supabase.from("attendance")
+    .delete()
+    .eq("event_id", event_id)
+    .eq("member_id", member_id);
+
+  await supabase.from("attendance").insert([
+    { event_id, member_id, status }
+  ]);
+
+  loadAttendanceMemberList(event_id);
+  loadAttendanceMatrix(event_id);
+}
+
+/* -------------------------------
+   Vorstand: Matrix
+------------------------------- */
+async function loadAttendanceMatrix(event_id) {
+  const box = document.getElementById("attendanceMatrix");
+  box.innerHTML = "Carregando...";
+
+  const [membersRes, eventsRes, attRes] = await Promise.all([
+    supabase.from("members").select("*"),
+    supabase.from("events").select("*"),
+    supabase.from("attendance").select("*")
+  ]);
+
+  const members = membersRes.data;
+  const events = eventsRes.data;
+  const att = attRes.data;
+
+  // Sortierung
+  members.sort((a, b) =>
+    NAIPE_ORDER.indexOf(a.naipe) - NAIPE_ORDER.indexOf(b.naipe)
+  );
+  events.sort((a, b) =>
+    new Date(a.start) - new Date(b.start)
+  );
+
+  const colCount = events.length + 1;
+  box.style.gridTemplateColumns = `repeat(${colCount}, 150px)`;
+
+  box.innerHTML = "";
+
+  // Header
+  box.innerHTML += `<div class="matrix-header">Mitglied</div>`;
+  events.forEach(e => {
+    box.innerHTML += `<div class="matrix-header">${formatDateDE(e.start)}</div>`;
+  });
+
+  // Rows
+  members.forEach(m => {
+    box.innerHTML += `<div class="matrix-cell"><strong>${m.name}</strong></div>`;
+
+    events.forEach(ev => {
+      const record = att.find(a => a.event_id === ev.id && a.member_id === m.id);
+
+      let cellClass = "matrix-cell";
+      let text = "-";
+
+      if (record?.status === "yes") {
+        cellClass += " matrix-yes";
+        text = "✓";
+      }
+      if (record?.status === "no") {
+        cellClass += " matrix-no";
+        text = "X";
+      }
+
+      box.innerHTML += `<div class="${cellClass}">${text}</div>`;
+    });
+  });
+}
 
 /* ====================================================
    Init
