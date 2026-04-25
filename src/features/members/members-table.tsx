@@ -5,8 +5,8 @@ import { createClient } from '@supabase/supabase-js';
 
 // 🔥 WICHTIG: echte Werte einsetzen
 const supabase = createClient(
-  'https://XXXX.supabase.co',
-  'XXXX'
+  'https://ifrpcqqkyoidyfhjglhk.supabase.co,
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmcnBjcXFreW9pZHlmaGpnbGhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzMzI5MzYsImV4cCI6MjA5MTkwODkzNn0.x0D5118W2nJh_vfSHgfdf3wjL8Pr4L2aNmV5QrRMRms'
 );
 
 export default function MembersTable() {
