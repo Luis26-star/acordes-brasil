@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
+// 🔥 WICHTIG: echte Werte einsetzen
 const supabase = createClient(
   'https://XXXX.supabase.co',
   'XXXX'
@@ -18,7 +19,7 @@ export default function MembersTable() {
   }, []);
 
   async function load() {
-    console.log('LOAD START');
+    console.log('START LOAD');
 
     try {
       setLoading(true);
@@ -34,11 +35,11 @@ export default function MembersTable() {
 
       setMembers(data || []);
     } catch (err: any) {
-      console.error('LOAD ERROR:', err);
+      console.error('ERROR:', err);
       setError(err.message || 'Unbekannter Fehler');
     } finally {
-      console.log('LOAD END');
-      setLoading(false);
+      console.log('END LOAD');
+      setLoading(false); // 🔥 DAS ist entscheidend
     }
   }
 
