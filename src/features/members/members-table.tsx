@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 
-export default function MembersTable() {
-  const [members, setMembers] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+ export default function MembersTable() {
+  return <div style={{ padding: 20 }}>🔥 ICH BIN NEU 🔥</div>;
+}
+
 
   useEffect(() => {
     load();
