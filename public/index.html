@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Acordes Brasil</title>
+</head>
+<body>
+
+<h1>Mitglieder</h1>
+<div id="members">Laden...</div>
+
+<script>
+async function load() {
+  try {
+    const res = await fetch(
+      'https://DEIN-PROJEKT.supabase.co/rest/v1/profiles',
+      {
+        headers: {
+          apikey: 'DEIN_ANON_KEY',
+          Authorization: 'Bearer DEIN_ANON_KEY',
+        },
+      }
+    );
+
+    const data = await res.json();
+
+    const el = document.getElementById('members');
+    el.innerHTML = '';
+
+    data.forEach(m => {
+      const div = document.createElement('div');
+      div.innerText = m.id + ' – ' + m.role;
+      el.appendChild(div);
+    });
+
+  } catch (err) {
+    document.getElementById('members').innerText = 'Fehler';
+  }
+}
+
+load();
+</script>
+
+</body>
+</html>
