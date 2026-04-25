@@ -1,13 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { createClient, type Session } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js';
 
-// 🔥 HARDCODE (für GitHub Pages nötig)
-const supabase = createClient('https://XXXX.supabase.co', 'XXXX');
+const supabase = createClient(
+  'https://XXXX.supabase.co',
+  'XXXX'
+);
 
 export default function MembersTable() {
-  const [profile, setProfile] = useState<any | null>(null);
+  const [members, setMembers] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -16,50 +18,50 @@ export default function MembersTable() {
   }, []);
 
   async function load() {
+    console.log('LOAD START');
+
     try {
       setLoading(true);
-      setError(null);
-
-      const {
-        data: { session },
-        error: sessionError,
-      } = await supabase.auth.getSession();
-
-      if (sessionError) throw sessionError;
-
-      if (!session) {
-        setProfile(null);
-        setError('Nicht eingeloggt. (authenticated required)');
-        return;
-      }
 
       const { data, error } = await supabase
         .from('profiles')
-        .select('*')
-        .single(); // wegen deiner RLS: der member sieht nur seinen eigenen Datensatz
+        .select('*');
+
+      console.log('DATA:', data);
+      console.log('ERROR:', error);
 
       if (error) throw error;
 
-      setProfile(data);
+      setMembers(data || []);
     } catch (err: any) {
-      console.error(err);
-      setError(err?.message ?? 'Unbekannter Fehler');
+      console.error('LOAD ERROR:', err);
+      setError(err.message || 'Unbekannter Fehler');
     } finally {
+      console.log('LOAD END');
       setLoading(false);
     }
   }
 
+  // ================= UI =================
+
   if (loading) return <div>Laden...</div>;
+
   if (error) return <div>Fehler: {error}</div>;
-  if (!profile) return <div>Keine Daten vorhanden</div>;
+
+  if (members.length === 0) {
+    return <div>Keine Mitglieder gefunden</div>;
+  }
 
   return (
     <div>
-      <h2>Mein Profil</h2>
+      <h2>Mitglieder</h2>
+
       <ul>
-        <li>
-          {profile.id} - {profile.role}
-        </li>
+        {members.map((m) => (
+          <li key={m.id}>
+            {m.id} – {m.role}
+          </li>
+        ))}
       </ul>
     </div>
   );
