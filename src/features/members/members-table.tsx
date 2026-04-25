@@ -32,7 +32,42 @@ type Member = {
 
 export function MembersTable() {
   const [members, setMembers] = useState<Member[]>([]);
-  const [loading, setLoading] = useState(true);
+  'use client';
+
+import { useEffect, useState } from 'react';
+import { supabase } from '@/lib/supabase';
+
+export default function DebugMembers() {
+  const [state, setState] = useState<any>({
+    loading: true,
+    data: null,
+    error: null,
+  });
+
+  useEffect(() => {
+    load();
+  }, []);
+
+  const load = async () => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('*');
+
+    setState({
+      loading: false,
+      data,
+      error,
+    });
+  };
+
+  return (
+    <div style={{ padding: 20 }}>
+      <h2>DEBUG</h2>
+
+      <pre>{JSON.stringify(state, null, 2)}</pre>
+    </div>
+  );
+}
 
   // ================= LOAD =================
   async function load() {
