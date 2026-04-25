@@ -1,17 +1,12 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { createClient } from '@/utils/supabase/client'; // oder woher dein supabase import kommt
 
- // src/components/MembersTable.tsx
-
-// ALT (wahrscheinlich nur id und role):
-// .select('id, role')
-
-// NEU (alle deine Datenbankfelder):
-const { data, error } = await supabase
-  .from('profiles')
-  .select('id, member_number, name, email, voice, phone, role, status');
-
+export default function MembersTable() {
+  const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     load();
@@ -20,8 +15,57 @@ const { data, error } = await supabase
   async function load() {
     try {
       setLoading(true);
+      setError(null);
+      
+      const supabase = createClient();
+      
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('id, member_number, name, email, voice, phone, role, status');
 
-      const res = await fetch(
+      if (error) throw error;
+      
+      setMembers(data || []);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  if (loading) return <div>Laden...</div>;
+  if (error) return <div>Fehler: {error}</div>;
+
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>Member-Nr.</th>
+          <th>Name</th>
+          <th>E-Mail</th>
+          <th>Stimme</th>
+          <th>Telefon</th>
+          <th>Rolle</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {members.map((m) => (
+          <tr key={m.id}>
+            <td>{m.member_number || '-'}</td>
+            <td>{m.name || '-'}</td>
+            <td>{m.email || '-'}</td>
+            <td>{m.voice || '-'}</td>
+            <td>{m.phone || '-'}</td>
+            <td>{m.role || '-'}</td>
+            <td>{m.status || '-'}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+const res = await fetch(
         'https://ifrpcqqkyoidyfhjglhk.supabase.co/rest/v1/profiles',
         {
           headers: {
