@@ -34,7 +34,7 @@ export default function MembersTable() {
       setMembers(data || []);
     } catch (err: any) {
       console.error(err);
-      setError(err.message);
+      setError(err.message || 'Fehler beim Laden');
     } finally {
       setLoading(false);
     }
@@ -47,7 +47,7 @@ export default function MembersTable() {
   if (error) return <div>Fehler: {error}</div>;
 
   if (members.length === 0) {
-    return <div>Keine Mitglieder gefunden</div>;
+    return <div>Keine Mitglieder vorhanden</div>;
   }
 
   return (
