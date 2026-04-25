@@ -1,3 +1,5 @@
+console.log(supabase);
+
 'use client';
 
 import { useEffect, useState } from 'react';
