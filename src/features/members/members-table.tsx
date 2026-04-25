@@ -138,7 +138,11 @@ export default function DebugMembers() {
   }
 
   // ================= UI =================
-  if (loading) return <MembersTableSkeleton />;
+  if (loading) return <div>Laden...</div>;
+
+if (error) return <div>Fehler: {error}</div>;
+
+if (data.length === 0) return <div>Keine Mitglieder</div>;
 
   return (
     <table
