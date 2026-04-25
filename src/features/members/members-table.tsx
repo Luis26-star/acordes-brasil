@@ -2,9 +2,15 @@
 
 import { useEffect, useState } from 'react';
 
- export default function MembersTable() {
-  return <div style={{ padding: 20 }}>🔥 ICH BIN NEU 🔥</div>;
-}
+ // src/components/MembersTable.tsx
+
+// ALT (wahrscheinlich nur id und role):
+// .select('id, role')
+
+// NEU (alle deine Datenbankfelder):
+const { data, error } = await supabase
+  .from('profiles')
+  .select('id, member_number, name, email, voice, phone, role, status');
 
 
   useEffect(() => {
