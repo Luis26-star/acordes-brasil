@@ -3,11 +3,32 @@
 import { useEffect, useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
 
-const supabase = createClient(
-  'https://ifrpcqqkyoidyfhjglhk.supabase.co'
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlmcnBjcXFreW9pZHlmaGpnbGhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzYzMzI5MzYsImV4cCI6MjA5MTkwODkzNn0.x0D5118W2nJh_vfSHgfdf3wjL8Pr4L2aNmV5QrRMRms'
-);
+async function load() {
+  addLog('1️⃣ RAW FETCH START');
 
+  try {
+    const res = await fetch(
+      'https://XXXX.supabase.co/rest/v1/profiles',
+      {
+        headers: {
+          apikey: 'XXXX',
+          Authorization: 'Bearer XXXX',
+        },
+      }
+    );
+
+    addLog('2️⃣ RESPONSE STATUS: ' + res.status);
+
+    const data = await res.json();
+
+    addLog('3️⃣ DATA: ' + JSON.stringify(data));
+  } catch (err: any) {
+    addLog('🔥 ERROR: ' + err.message);
+  } finally {
+    addLog('4️⃣ DONE');
+    setLoading(false);
+  }
+}
 export default function MembersTable() {
   const [log, setLog] = useState<string[]>([]);
   const [members, setMembers] = useState<any[]>([]);
